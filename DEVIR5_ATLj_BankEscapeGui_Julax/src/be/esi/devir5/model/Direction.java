@@ -1,4 +1,4 @@
-package model;
+package be.esi.devir5.model;
 
 /**
  * Enumeration des directions de mouvements

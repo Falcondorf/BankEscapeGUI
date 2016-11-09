@@ -1,8 +1,7 @@
-package devir5_atlj_bankescapegui_julax;
+package be.esi.devir5.GUI;
 
-import controller.*;
+import be.esi.devir5.model.Game;
 import java.io.IOException;
-import model.*;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;

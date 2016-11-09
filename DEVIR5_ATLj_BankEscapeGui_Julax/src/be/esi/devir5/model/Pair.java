@@ -1,5 +1,5 @@
 
-package model;
+package be.esi.devir5.model;
 
 /**
  *

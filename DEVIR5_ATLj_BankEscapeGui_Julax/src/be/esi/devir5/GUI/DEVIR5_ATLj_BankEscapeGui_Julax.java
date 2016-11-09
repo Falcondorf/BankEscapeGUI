@@ -1,5 +1,5 @@
 
-package devir5_atlj_bankescapegui_julax;
+package be.esi.devir5.GUI;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

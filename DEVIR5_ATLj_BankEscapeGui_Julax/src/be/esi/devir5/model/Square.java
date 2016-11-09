@@ -1,4 +1,4 @@
-package model;
+package be.esi.devir5.model;
 
 /**
  * Classe représentant une case du plateau de jeu.

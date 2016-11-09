@@ -1,4 +1,4 @@
-package model;
+package be.esi.devir5.model;
 
 /**
  * Classe Player, represente le joueur avec ses caractéristiques.
