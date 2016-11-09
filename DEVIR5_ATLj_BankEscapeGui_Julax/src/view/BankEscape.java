@@ -1,9 +1,9 @@
-package be.esi.devir5.view;
+package view;
 
-import be.esi.devir5.model.Game;
+import model.*;
 import java.io.IOException;
-import be.esi.devir5.controller.ThreadEnemy;
-import be.esi.devir5.controller.ThreadPlayer;
+import controller.ThreadEnemy;
+import controller.ThreadPlayer;
 
 /**
  *
@@ -21,7 +21,7 @@ public class BankEscape {
 //            maze.displace(p, Direction.UP);
 //            System.out.println(p.getRow());
 //            
-           Game g = new Game("Niveau3.txt");
+           Game g = new Game("levels/Niveau2.txt");
             ThreadPlayer tp = new ThreadPlayer(g);
             ThreadEnemy te = new ThreadEnemy(g);
             te.start();

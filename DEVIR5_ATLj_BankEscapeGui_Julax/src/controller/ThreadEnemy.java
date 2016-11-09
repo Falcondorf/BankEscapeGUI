@@ -1,6 +1,6 @@
-package be.esi.devir5.controller;
+package controller;
 
-import be.esi.devir5.model.Game;
+import model.Game;
 
 /**
  * Classe qui gère le thread généralisant les actions effectuée par les ennemis

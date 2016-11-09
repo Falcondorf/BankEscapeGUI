@@ -1,7 +1,8 @@
-package be.esi.devir5.GUI;
+package gui;
 
-import be.esi.devir5.model.Game;
+import controller.*;
 import java.io.IOException;
+import model.*;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -27,70 +28,63 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private void handleButtonSolo(ActionEvent event) {
         Stage rootSolo = new Stage();
-        
+        gridPaneStatic = new GridPane();
         try {
 
-            Game g = new Game("Niveau2.txt");
+            Game g = new Game("levels/Niveau2.txt");
 
             for (int i = 0; i < g.getMaze().getSquare().length; i++) {
                 for (int j = 0; j < g.getMaze().getSquare()[0].length; j++) {
                     ImageView img = new ImageView();
                     switch (g.getMaze().getSquare()[i][j].getType()) {
                         case "wall":
-                            if (g.getMaze().getSquare()[i][j].hasDrill()) {
-                                img = new ImageView(new Image(FXMLDocumentController.class.getResourceAsStream("..\\images\\sis.jpg")));
-                            } else if (g.getMaze().getSquare()[i][j].hasEnemy()) {
-                                img = new ImageView(new Image(FXMLDocumentController.class.getResourceAsStream("..\\images\\sis.jpg")));
-                            } else if (g.getMaze().getSquare()[i][j].hasKey()) {
-                                img = new ImageView(new Image(FXMLDocumentController.class.getResourceAsStream("..\\images\\sis.jpg")));
-                            } else if (g.getMaze().getSquare()[i][j].hasPlayer()) {
-                                img = new ImageView(new Image(FXMLDocumentController.class.getResourceAsStream("..\\images\\sis.jpg")));
-                            } else {
-                                img = new ImageView(new Image(FXMLDocumentController.class.getResourceAsStream("..\\images\\sis.jpg")));
-                            }
+                           
+                               // img = new ImageView(new Image(FXMLDocumentController.class.getResourceAsStream(".\\src\\images\\sis.jpg")));
+                                img = new ImageView("file:src/images/sis.jpg");
+                            
 
                             break;
                         case "exit":
-                            img = new ImageView(new Image(FXMLDocumentController.class.getResourceAsStream("..\\images\\sis.jpg")));
+                          img = new ImageView("file:src/images/sis.jpg");
                             break;
                         case "floor":
                             if (g.getMaze().getSquare()[i][j].hasDrill()) {
-                                img = new ImageView(new Image(FXMLDocumentController.class.getResourceAsStream("..\\images\\sis.jpg")));
+                               img = new ImageView("file:src/images/sis.jpg");
                             } else if (g.getMaze().getSquare()[i][j].hasEnemy()) {
-                                img = new ImageView(new Image(FXMLDocumentController.class.getResourceAsStream("..\\images\\sis.jpg")));
+                               img = new ImageView("file:src/images/sis.jpg");
                             } else if (g.getMaze().getSquare()[i][j].hasKey()) {
-                                img = new ImageView(new Image(FXMLDocumentController.class.getResourceAsStream("..\\images\\sis.jpg")));
+                               img = new ImageView("file:src/images/sis.jpg");
                             } else if (g.getMaze().getSquare()[i][j].hasPlayer()) {
-                                img = new ImageView(new Image(FXMLDocumentController.class.getResourceAsStream("..\\images\\sis.jpg")));
+                                img = new ImageView("file:src/images/sis.jpg");
                             } else {
-                                img = new ImageView(new Image(FXMLDocumentController.class.getResourceAsStream("..\\images\\sis.jpg")));
+                               img = new ImageView("file:src/images/sis.jpg");
                             }
                             break;
                         case "entry":
                             if (g.getMaze().getSquare()[i][j].hasPlayer()) {
-                                img = new ImageView(new Image(FXMLDocumentController.class.getResourceAsStream("..\\images\\sis.jpg")));
+                               img = new ImageView("file:src/images/sis.jpg");
                             } else {
-                                img = new ImageView(new Image(FXMLDocumentController.class.getResourceAsStream("..\\images\\sis.jpg")));
+                               img = new ImageView("file:src/images/sis.jpg");
                             }
                             break;
                         case "vault":
-                            img = new ImageView(new Image(FXMLDocumentController.class.getResourceAsStream("..\\images\\sis.jpg")));
+                            img = new ImageView("file:src/images/sis.jpg");
                             break;
                         default:
                             System.out.println("Error : invalid element read ");
                     }
-                    img.setFitHeight(20);
-                    img.setFitWidth(20);
-                    img.setX(j * 20);
-                    img.setY(i * 20);
-                    this.gridPaneStatic.getChildren().add(img);
+                    img.setFitHeight(80);
+                    img.setFitWidth(80);
+                    img.setX(j * 80);
+                    img.setY(i * 80);
+                    this.gridPaneStatic.add(img,j,i);
                 }
               //  str += "\n";
             }
             
             Scene myScene =new Scene(gridPaneStatic);
             rootSolo.setScene(myScene);
-            //rootSolo.show();
+            rootSolo.show();
 
 //            ThreadPlayer tp = new ThreadPlayer(g);
 //            ThreadEnemy te = new ThreadEnemy(g);

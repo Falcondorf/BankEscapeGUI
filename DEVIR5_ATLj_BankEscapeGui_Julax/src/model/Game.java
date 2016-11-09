@@ -1,4 +1,4 @@
-package be.esi.devir5.model;
+package model;
 
 import java.io.IOException;
 

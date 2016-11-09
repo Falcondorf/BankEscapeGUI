@@ -1,20 +1,22 @@
 
-package be.esi.devir5.GUI;
+package gui;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import model.*;
 
 /**
  *
  * @author jackd
  */
-public class DEVIR5_ATLj_BankEscapeGui_Julax extends Application {
+public class mainGui extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
+      //  Game game = new Game("levels/Niveau2.txt");
         Parent root = FXMLLoader.load(getClass().getResource("StartWindow.fxml"));
         
         Scene scene = new Scene(root);

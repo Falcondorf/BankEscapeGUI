@@ -1,4 +1,4 @@
-package be.esi.devir5.model;
+package model;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -400,9 +400,8 @@ public class Maze {
         StringBuffer buf1 = new StringBuffer();
         StringBuffer buf2 = new StringBuffer();
         StringBuffer buf3 = new StringBuffer();
-        FileReader in = new FileReader(new File(getClass().getResource("../levels/" + nameLv).getPath()));
 
-        BufferedReader br = new BufferedReader(in);
+        BufferedReader br = new BufferedReader(new FileReader(nameLv));
         while ((r = br.read()) != '/') {
             buf1.append((char) r);
         }

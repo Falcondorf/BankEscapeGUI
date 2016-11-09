@@ -1,4 +1,4 @@
-package be.esi.devir5.model;
+package model;
 
 /**
  * Classe spécifiant la position d'un Movable dans le jeu.
