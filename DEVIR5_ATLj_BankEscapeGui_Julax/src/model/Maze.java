@@ -48,6 +48,14 @@ public class Maze {
         }
     }
 
+    public int getWidth() {
+        return maze.length;
+    }
+
+    public int getHeight() {
+        return maze[0].length;
+    }
+
     public Maze(Maze maze) {
         //todo constructeur copie profonde
     }
@@ -412,6 +420,7 @@ public class Maze {
         }
 
         this.enemyList = new ArrayList<>();
+
         maze = new Square[Integer.parseInt(buf1.toString())][Integer.parseInt(buf2.toString())];
         this.nextLevelName = buf3.toString();
         for (int i = 0; i < Integer.parseInt(buf1.toString()); i++) {
