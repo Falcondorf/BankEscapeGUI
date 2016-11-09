@@ -21,7 +21,7 @@ public class BankEscape {
 //            maze.displace(p, Direction.UP);
 //            System.out.println(p.getRow());
 //            
-           Game g = new Game("levels/Niveau2.txt");
+            Game g = new Game("levels/Niveau2.txt");
             ThreadPlayer tp = new ThreadPlayer(g);
             ThreadEnemy te = new ThreadEnemy(g);
             te.start();
@@ -34,8 +34,8 @@ public class BankEscape {
             }
 
         } catch (IOException | RuntimeException ex) {
-           System.out.println(ex);
-       }
+            System.out.println(ex);
+        }
 
     }
 

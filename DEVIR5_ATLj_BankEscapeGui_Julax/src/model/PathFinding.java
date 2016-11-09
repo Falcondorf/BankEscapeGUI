@@ -1,4 +1,3 @@
-
 package model;
 
 import java.util.ArrayList;
@@ -9,7 +8,7 @@ import java.util.List;
  * @author Jules Dupont
  */
 public class PathFinding {
-    
+
     private static Square[][] maze;
     private static Position currPos;
     private static Position objPos;
@@ -17,10 +16,9 @@ public class PathFinding {
     private static int cpt;
     private static List<Pair<Position, Integer>> save;
     private static boolean isBlocked;
-    private static Pair<Position,Integer> search;
-    
-    
-     private static boolean reachEnd() {
+    private static Pair<Position, Integer> search;
+
+    private static boolean reachEnd() {
         if (currPos.getRow() == objPos.getRow() && currPos.getColumn() == objPos.getColumn()) {
             return true;
         }
@@ -89,70 +87,66 @@ public class PathFinding {
                 break;
         }
     }
-    
-    private static boolean verifLeftArm(boolean lookExit, boolean lookVault) throws Exception{
-         switch (nose) {
+
+    private static boolean verifLeftArm(boolean lookExit, boolean lookVault) throws Exception {
+        switch (nose) {
             case UP:
-                return (currPos.getColumn()- 1 > 0) && maze[currPos.getRow()][currPos.getColumn()-1].isReachable(lookExit, lookVault);
+                return (currPos.getColumn() - 1 > 0) && maze[currPos.getRow()][currPos.getColumn() - 1].isReachable(lookExit, lookVault);
             case DOWN:
-                return (currPos.getColumn() + 1 < maze[0].length - 1) && maze[currPos.getRow()][currPos.getColumn()+ 1].isReachable(lookExit, lookVault);
+                return (currPos.getColumn() + 1 < maze[0].length - 1) && maze[currPos.getRow()][currPos.getColumn() + 1].isReachable(lookExit, lookVault);
             case LEFT:
-                return (currPos.getRow()+ 1 > 0) && maze[currPos.getRow()+ 1][currPos.getColumn() ].isReachable(lookExit, lookVault);
+                return (currPos.getRow() + 1 > 0) && maze[currPos.getRow() + 1][currPos.getColumn()].isReachable(lookExit, lookVault);
             case RIGHT:
-                return (currPos.getRow() - 1 < maze.length - 1) && maze[currPos.getRow()- 1][currPos.getColumn() ].isReachable(lookExit, lookVault);
+                return (currPos.getRow() - 1 < maze.length - 1) && maze[currPos.getRow() - 1][currPos.getColumn()].isReachable(lookExit, lookVault);
             default:
                 throw new Exception("wrong direction");
 
         }
     }
-    
-    public static boolean findPath (Position p1, Position p2,
-            Square[][] maze, boolean searchVault, boolean searchExit) 
-            throws Exception{
-        currPos =p1;
+
+    public static boolean findPath(Position p1, Position p2,
+            Square[][] maze, boolean searchVault, boolean searchExit)
+            throws Exception {
+        currPos = p1;
         objPos = p2;
         save = new ArrayList<>();
         cpt = 0;
         nose = Direction.UP;
         isBlocked = false;
         PathFinding.maze = maze;
-        while (!reachEnd() && !isBlocked && cpt<15){
-            if(cpt==0){
-                if(verifWall()){
-                    save.add(new Pair(new Position(currPos.getRow(), currPos.getColumn()),cpt));
+        while (!reachEnd() && !isBlocked && cpt < 15) {
+            if (cpt == 0) {
+                if (verifWall()) {
+                    save.add(new Pair(new Position(currPos.getRow(), currPos.getColumn()), cpt));
                     displace();
-                }else{
+                } else {
                     turn(false);
                 }
-            }else{
-                if(verifLeftArm(searchExit, searchVault)){
-                    turn(true);
-                    save.add(new Pair(new Position(currPos.getRow(), currPos.getColumn()),cpt));
-                    displace();
-                }else{
-                    if(verifWall()){
-                        save.add(new Pair(new Position(currPos.getRow(), currPos.getColumn()),cpt));
-                        displace();
-                    }else{                        
-                        turn(false);
-                    }
-                }
+            } else if (verifLeftArm(searchExit, searchVault)) {
+                turn(true);
+                save.add(new Pair(new Position(currPos.getRow(), currPos.getColumn()), cpt));
+                displace();
+            } else if (verifWall()) {
+                save.add(new Pair(new Position(currPos.getRow(), currPos.getColumn()), cpt));
+                displace();
+            } else {
+                turn(false);
             }
             isBlocked = stateExisting();
-            if(cpt >= 15){
+            if (cpt >= 15) {
                 isBlocked = true;
             }
-            
+
         }
         return !isBlocked;
     }
 
     private static boolean stateExisting() {
-        search = new Pair(new Position(currPos.getRow(), currPos.getColumn()),cpt);
-        for(int i =0 ; i< save.size()-1 ; i++){
-            if(save.get(i).getFirst().getRow() == search.getFirst().getRow()
+        search = new Pair(new Position(currPos.getRow(), currPos.getColumn()), cpt);
+        for (int i = 0; i < save.size() - 1; i++) {
+            if (save.get(i).getFirst().getRow() == search.getFirst().getRow()
                     && save.get(i).getFirst().getColumn() == search.getFirst().getColumn()
-                    && save.get(i).getSecond().equals(search.getSecond())){
+                    && save.get(i).getSecond().equals(search.getSecond())) {
                 isBlocked = true;
             }
         }

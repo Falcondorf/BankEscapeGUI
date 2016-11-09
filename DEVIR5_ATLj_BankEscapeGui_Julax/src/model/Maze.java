@@ -47,8 +47,8 @@ public class Maze {
             System.out.println(ex);
         }
     }
-    
-    public Maze(Maze maze){
+
+    public Maze(Maze maze) {
         //todo constructeur copie profonde
     }
 
@@ -70,7 +70,6 @@ public class Maze {
         return maze;
     }
 
-    
     /**
      * Permet de savoir si un joueur est dans une sortie avec le butin
      *
@@ -182,7 +181,7 @@ public class Maze {
     }
 
     private void watch(Enemy e) {  //champ de vision 3
-        if (lookingForPlayer(e)){
+        if (lookingForPlayer(e)) {
             player.setIsCaught();
         }
     }
@@ -469,7 +468,5 @@ public class Maze {
             throw new IllegalArgumentException("Unvalid maze architecture");
         }
     }
-
-   
 
 }

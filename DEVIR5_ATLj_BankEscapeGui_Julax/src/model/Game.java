@@ -49,17 +49,17 @@ public class Game {
         }
         return this.maze.isCaught();
     }
-    
-    public boolean endLevel(){
-        if (this.maze.isEscaped()){
+
+    public boolean endLevel() {
+        if (this.maze.isEscaped()) {
             try {
                 maze = new Maze(this.maze.getNextLevelName());
                 return true;
             } catch (Exception ex) {
-                System.out.println("ERROR: "+ex);
+                System.out.println("ERROR: " + ex);
             }
         }
         return false;
-        
+
     }
 }

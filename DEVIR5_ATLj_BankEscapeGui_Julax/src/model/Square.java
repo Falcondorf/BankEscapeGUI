@@ -79,12 +79,12 @@ public class Square {
     public boolean hasDrill() {
         return hasDrill;
     }
-    
-    public boolean hasVault(){
-        return type.equals("vault") ;
+
+    public boolean hasVault() {
+        return type.equals("vault");
     }
-    
-    public boolean hasEntry(){
+
+    public boolean hasEntry() {
         return type.equals("entry");
     }
 
@@ -132,7 +132,7 @@ public class Square {
      * @param hasDrill true si le joueur possede la foreuse.
      * @return true si la case est atteignable.
      */
-    public boolean isReachable(boolean hasKey, boolean hasDrill) { 
+    public boolean isReachable(boolean hasKey, boolean hasDrill) {
         return (hasDrill && type.equals("vault"))
                 || (hasKey && type.equals("exit"))
                 || (type.equals("floor"))

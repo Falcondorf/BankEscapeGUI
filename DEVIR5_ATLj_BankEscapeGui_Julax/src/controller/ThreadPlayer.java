@@ -48,7 +48,7 @@ public class ThreadPlayer extends Thread {
                         break;
                     default:
                 }
-                if (!g.getMaze().isCaught()){
+                if (!g.getMaze().isCaught()) {
                     sleep(200);
                 }
             } catch (InterruptedException ex) {

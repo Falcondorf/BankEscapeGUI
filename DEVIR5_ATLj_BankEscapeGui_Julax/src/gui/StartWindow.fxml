@@ -6,15 +6,15 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane fx:id="anchor" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.FXMLDocumentController">
-   <children>
-      <VBox fx:id="vbox" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" spacing="50.0">
-         <children>
-            <Label fx:id="label" />
-            <Button fx:id="solo" mnemonicParsing="false" onAction="#handleButtonSolo" text="Solo" />
-            <Button fx:id="editor" mnemonicParsing="false" onAction="#handleButtonEdit" text="Editor" />
-            <Button fx:id="exit" mnemonicParsing="false" onAction="#quitWindowEvent" text="Exit" />
-         </children>
-      </VBox>
-   </children>
+<AnchorPane fx:id="anchor" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.StartWindowController">
+    <children>
+        <VBox fx:id="vbox" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" spacing="50.0">
+            <children>
+                <Label fx:id="label" />
+                <Button fx:id="solo" mnemonicParsing="false" onAction="#handleButtonSolo" text="Solo" />
+                <Button fx:id="editor" mnemonicParsing="false" onAction="#handleButtonEdit" text="Editor" />
+                <Button fx:id="exit" mnemonicParsing="false" onAction="#quitWindowEvent" text="Exit" />
+            </children>
+        </VBox>
+    </children>
 </AnchorPane>

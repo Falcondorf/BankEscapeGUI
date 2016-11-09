@@ -1,18 +1,18 @@
-
 package model;
 
 /**
  *
  * @author Jules Dupont
  */
-public class Pair<A,B> {
+public class Pair<A, B> {
+
     private A first;
     private B second;
 
     public Pair(A first, B second) {
-     super();
-     this.first = first;
-     this.second = second;
+        super();
+        this.first = first;
+        this.second = second;
     }
 
     public A getFirst() {
@@ -30,6 +30,5 @@ public class Pair<A,B> {
     public void setSecond(B second) {
         this.second = second;
     }
-    
-    
+
 }
