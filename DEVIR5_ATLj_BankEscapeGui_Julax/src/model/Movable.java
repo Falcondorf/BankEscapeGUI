@@ -1,11 +1,13 @@
 package model;
 
+import javafx.beans.Observable;
+
 /**
  * Classe mère représentant toute entité déplacable
  *
  * @author pikirby45
  */
-public class Movable {
+public class Movable{
 
     private Position pos;
 
@@ -14,7 +16,7 @@ public class Movable {
      *
      * @param position La position du déplacable
      */
-    public Movable(Position position) {
+    public Movable(Position position){
         this.pos = position;
     }
 

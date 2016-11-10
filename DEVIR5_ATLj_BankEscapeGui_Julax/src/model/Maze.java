@@ -6,13 +6,14 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
 
 /**
  * Classe représentant un labyrinth
  *
  * @author pikirby45
  */
-public class Maze {
+public class Maze extends Observable {
 
     private Square[][] maze;
     private Player player;
@@ -48,6 +49,14 @@ public class Maze {
         }
     }
 
+    public Direction getEnemyDir(int i , int j){
+        for(Enemy e : enemyList){
+            if(e.getRow()==i && e.getColumn() ==j){
+                return e.getDirection();
+            }
+        }
+        throw new NullPointerException("no enemy here");
+    }
     public int getWidth() {
         return maze.length;
     }
@@ -70,6 +79,8 @@ public class Maze {
             this.removePlayer(player.getRow(), player.getColumn());
             displacePlayer(dir);
             pickSomething();
+            setChanged();
+            notifyObservers();
             notifyAll();
         }
     }
@@ -102,6 +113,8 @@ public class Maze {
                 this.putEnemy(e.getRow(), e.getColumn());
                 e.setDirection(tmpMov);
                 watch(e);
+                setChanged();
+                notifyObservers();
             } catch (Exception ex) {
                 System.out.println(ex);
             }
@@ -178,13 +191,19 @@ public class Maze {
         if (maze[player.getRow()][player.getColumn()].hasKey()) {
             player.setHasKey(true);
             maze[player.getRow()][player.getColumn()].removeHasKey();
+            setChanged();
+            notifyObservers();
         }
         if (maze[player.getRow()][player.getColumn()].hasDrill()) {
             player.setHasDrill(true);
             maze[player.getRow()][player.getColumn()].removeDrill();
+            setChanged();
+            notifyObservers();
         }
         if (this.maze[this.player.getRow()][this.player.getColumn()].getType().equals("vault")) {
             player.setHasMoney(true);
+            setChanged();
+            notifyObservers();
         }
     }
 
