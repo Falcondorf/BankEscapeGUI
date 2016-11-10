@@ -10,6 +10,7 @@ import java.util.ResourceBundle;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -18,6 +19,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -31,16 +33,16 @@ import javafx.stage.Stage;
 public class SoloFxController extends Application implements Initializable, Observer {
 
     private AnchorPane anchor;
-    private Pane gpStatic;
-    private Pane gpDynamic;
+    private Pane paneStatic;
+    private Pane paneDynamic;
     private StackPane stackPane;
     private Game g;
     private Stage stage;
 
     public SoloFxController() {
         this.anchor = new AnchorPane();
-        this.gpStatic = new Pane();
-        this.gpDynamic = new Pane();
+        this.paneStatic = new Pane();
+        this.paneDynamic = new Pane();
         this.stackPane = new StackPane();
     }
 
@@ -55,8 +57,8 @@ public class SoloFxController extends Application implements Initializable, Obse
         g.getMaze().addObserver(SoloFxController.this);
         stage = primaryStage;
         insertImages();
-        stackPane.getChildren().add(gpStatic);
-        stackPane.getChildren().add(gpDynamic);
+        stackPane.getChildren().add(paneStatic);
+        stackPane.getChildren().add(paneDynamic);
         anchor.getChildren().add(stackPane);
         Parent root = anchor;
         Scene scene = new Scene(root);
@@ -67,6 +69,27 @@ public class SoloFxController extends Application implements Initializable, Obse
         ThreadEnemy te = new ThreadEnemy(g);
         te.start();
         tp.start();
+
+        scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                switch (event.getCode()) {
+                    case UP:
+                        g.getMaze().movePlayer(Direction.UP);
+                        break;
+                    case DOWN:
+                        g.getMaze().movePlayer(Direction.DOWN);
+                        break;
+                    case LEFT:
+                        g.getMaze().movePlayer(Direction.LEFT);
+                        break;
+                    case RIGHT:
+                        g.getMaze().movePlayer(Direction.RIGHT);
+                        break;
+                    default:
+                }
+            }
+        });
 //        while (!g.isLost()) {
 //            if (g.endLevel()) {
 //                te.start();
@@ -144,19 +167,19 @@ public class SoloFxController extends Application implements Initializable, Obse
     }
 
     private void setDynamicImage(ImageView img, int j, int i) {
-        img.setFitHeight(80);
-        img.setFitWidth(80);
-        img.setX(j * 80);
-        img.setY(i * 80);
-        this.gpDynamic.getChildren().add(img);
+        img.setFitHeight(70);
+        img.setFitWidth(70);
+        img.setX(j * 70);
+        img.setY(i * 70);
+        this.paneDynamic.getChildren().add(img);
     }
 
     private void setStaticImage(ImageView img, int j, int i) {
-        img.setFitHeight(80);
-        img.setFitWidth(80);
-        img.setX(j * 80);
-        img.setY(i * 80);
-        this.gpStatic.getChildren().add(img);
+        img.setFitHeight(70);
+        img.setFitWidth(70);
+        img.setX(j * 70);
+        img.setY(i * 70);
+        this.paneStatic.getChildren().add(img);
     }
 
     @Override
@@ -175,7 +198,7 @@ public class SoloFxController extends Application implements Initializable, Obse
     }
 
     private void refreshPane() {
-        gpDynamic.getChildren().clear();
+        paneDynamic.getChildren().clear();
         for (int i = 0; i < g.getMaze().getSquare().length; i++) {
             for (int j = 0; j < g.getMaze().getSquare()[0].length; j++) {
                 ImageView img = new ImageView();
@@ -200,25 +223,113 @@ public class SoloFxController extends Application implements Initializable, Obse
                             switch (g.getMaze().getEnemyDir(i, j)) {
                                 case UP:
                                     img = new ImageView("file:src/images/guardN.gif");
+                                    setDynamicImage(img, j, i);
+                                    if (!(g.getMaze().getSquare()[i - 1][j].getType().equals("wall"))) {
+                                        img = new ImageView("file:src/images/floorLight.png");
+                                        setDynamicImage(img, j, i - 1);
+                                        if (!(g.getMaze().getSquare()[i - 2][j].getType().equals("wall"))) {
+                                            img = new ImageView("file:src/images/floorLight.png");
+                                            setDynamicImage(img, j, i - 2);
+                                            if (!(g.getMaze().getSquare()[i - 3][j].getType().equals("wall"))) {
+                                                img = new ImageView("file:src/images/floorLight.png");
+                                                setDynamicImage(img, j, i - 3);
+                                            }
+                                        }
+                                    }
+
+//                                        
+//                                        img = new ImageView("file:src/images/floorLight.png");
+//                                        setDynamicImage(img, j, i - 1);
+//                                        i--;
+//                                        cpt++;
+//                                    }
                                     break;
                                 case DOWN:
                                     img = new ImageView("file:src/images/guardS.gif");
+                                    setDynamicImage(img, j, i);
+//                                    while (!g.getMaze().getSquare()[i + 1][j].getType().equals("wall")) {
+//                                        img = new ImageView("file:src/images/floorLight.png");
+//                                        setDynamicImage(img, j, i + 1);
+//                                        i++;
+//                                    }
+                                    if (!(g.getMaze().getSquare()[i + 1][j].getType().equals("wall"))) {
+                                        img = new ImageView("file:src/images/floorLight.png");
+                                        setDynamicImage(img, j, i + 1);
+                                        if (!(g.getMaze().getSquare()[i + 2][j].getType().equals("wall"))) {
+                                            img = new ImageView("file:src/images/floorLight.png");
+                                            setDynamicImage(img, j, i + 2);
+                                            if (!(g.getMaze().getSquare()[i + 3][j].getType().equals("wall"))) {
+                                                img = new ImageView("file:src/images/floorLight.png");
+                                                setDynamicImage(img, j, i + 3);
+                                            }
+                                        }
+                                    }
                                     break;
                                 case LEFT:
                                     img = new ImageView("file:src/images/guardO.gif");
+                                    setDynamicImage(img, j, i);
+//                                    while (!g.getMaze().getSquare()[i][j - 1].getType().equals("wall")) {
+//                                        img = new ImageView("file:src/images/floorLight.png");
+//                                        setDynamicImage(img, j - 1, i);
+//                                        j--;
+//                                    }
+                                    if (!(g.getMaze().getSquare()[i][j - 1].getType().equals("wall"))) {
+                                        img = new ImageView("file:src/images/floorLight.png");
+                                        setDynamicImage(img, j - 1, i);
+                                        if (!(g.getMaze().getSquare()[i][j - 2].getType().equals("wall"))) {
+                                            img = new ImageView("file:src/images/floorLight.png");
+                                            setDynamicImage(img, j - 2, i);
+                                            if (!(g.getMaze().getSquare()[i][j - 3].getType().equals("wall"))) {
+                                                img = new ImageView("file:src/images/floorLight.png");
+                                                setDynamicImage(img, j - 3, i);
+                                            }
+                                        }
+                                    }
                                     break;
                                 case RIGHT:
                                     img = new ImageView("file:src/images/guardE.gif");
+                                    setDynamicImage(img, j, i);
+//                                    while (!g.getMaze().getSquare()[i][j + 1].getType().equals("wall")) {
+//                                        img = new ImageView("file:src/images/floorLight.png");
+//                                        setDynamicImage(img, j + 1, i);
+//                                        j++;
+//                                    }
+                                    if (!(g.getMaze().getSquare()[i][j + 1].getType().equals("wall"))) {
+                                        img = new ImageView("file:src/images/floorLight.png");
+                                        setDynamicImage(img, j + 1, i);
+                                        if (!(g.getMaze().getSquare()[i][j + 2].getType().equals("wall"))) {
+                                            img = new ImageView("file:src/images/floorLight.png");
+                                            setDynamicImage(img, j + 2, i);
+                                            if (!(g.getMaze().getSquare()[i][j + 3].getType().equals("wall"))) {
+                                                img = new ImageView("file:src/images/floorLight.png");
+                                                setDynamicImage(img, j + 3, i);
+                                            }
+                                        }
+                                    }
                                     break;
                                 default:
                             }
 
-                            setDynamicImage(img, j, i);
                         } else if (g.getMaze().getSquare()[i][j].hasKey()) {
                             img = new ImageView("file:src/images/key.png");
                             setDynamicImage(img, j, i);
                         } else if (g.getMaze().getSquare()[i][j].hasPlayer()) {
-                            img = new ImageView("file:src/images/PlayerMovNHD.gif");
+                            switch (g.getMaze().getPlayerDir(i, j)) {
+                                case UP:
+                                    img = new ImageView("file:src/images/PlayerMovNHD.gif");
+                                    break;
+                                case DOWN:
+                                    img = new ImageView("file:src/images/PlayerMovS.gif");
+                                    break;
+                                case LEFT:
+                                    img = new ImageView("file:src/images/PlayerMovO.gif");
+                                    break;
+                                case RIGHT:
+                                    img = new ImageView("file:src/images/PlayerMovE.gif");
+                                    break;
+                                default:
+                            }
+
                             setDynamicImage(img, j, i);
                         }
                         break;
@@ -233,8 +344,8 @@ public class SoloFxController extends Application implements Initializable, Obse
                     default:
                         break;
                 }
-                // setStaticImage(img, j, i);
 
+                // setStaticImage(img, j, i);
             }
             //  str += "\n";
         }

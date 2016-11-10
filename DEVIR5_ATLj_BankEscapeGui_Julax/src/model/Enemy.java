@@ -12,7 +12,7 @@ import java.util.Random;
 public class Enemy extends Movable {
 
     private boolean inAlert = false;
-    private Direction direction;
+
     private List<Direction> possibleDirection;
     private Random random = new Random();
 
@@ -23,9 +23,8 @@ public class Enemy extends Movable {
      * @param pos La position du vigile
      */
     public Enemy(Direction direction, Position pos) {
-        super(pos);
+        super(pos,direction);
         possibleDirection = new ArrayList<>();
-        this.direction = direction;
     }
 
     /**
@@ -46,23 +45,6 @@ public class Enemy extends Movable {
         this.inAlert = inAlert;
     }
 
-    /**
-     * Accesseur de la direction vers laquelle regarde et se dirige le vigile
-     *
-     * @return La direction du vigile
-     */
-    public Direction getDirection() {
-        return direction;
-    }
-
-    /**
-     * Mutateur de la direction du vigile. Modifie ainsi la direction.
-     *
-     * @param direction La nouvelle direction du vigile
-     */
-    public void setDirection(Direction direction) {
-        this.direction = direction;
-    }
 
     /**
      * Permet de savoir combien de direction sont possible autour du vigile

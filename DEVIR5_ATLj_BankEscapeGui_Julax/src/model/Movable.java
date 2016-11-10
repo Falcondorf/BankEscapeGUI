@@ -7,17 +7,20 @@ import javafx.beans.Observable;
  *
  * @author pikirby45
  */
-public class Movable{
+public class Movable {
 
     private Position pos;
+    private Direction direction;
 
     /**
      * Constructeur de la classe. Lui donne une position géographique
      *
      * @param position La position du déplacable
+     * @param dir
      */
-    public Movable(Position position){
+    public Movable(Position position, Direction dir) {
         this.pos = position;
+        this.direction = dir;
     }
 
     /**
@@ -46,6 +49,24 @@ public class Movable{
      */
     public int getColumn() {
         return pos.getColumn();
+    }
+
+        /**
+     * Accesseur de la direction vers laquelle regarde et se dirige le vigile
+     *
+     * @return La direction du vigile
+     */
+    public Direction getDirection() {
+        return direction;
+    }
+
+    /**
+     * Mutateur de la direction du vigile. Modifie ainsi la direction.
+     *
+     * @param direction La nouvelle direction du vigile
+     */
+    public void setDirection(Direction direction) {
+        this.direction = direction;
     }
 
 }

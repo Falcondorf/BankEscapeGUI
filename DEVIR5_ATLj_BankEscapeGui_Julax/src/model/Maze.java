@@ -57,6 +57,13 @@ public class Maze extends Observable {
         }
         throw new NullPointerException("no enemy here");
     }
+    
+    public Direction getPlayerDir(int i , int j){
+         if(player.getRow()==i && player.getColumn() ==j){
+                return player.getDirection();
+         }
+          throw new NullPointerException("no player here");
+    }
     public int getWidth() {
         return maze.length;
     }
@@ -231,6 +238,7 @@ public class Maze extends Observable {
     private void displacePlayer(Direction dir) {
         player.move(dir);     //deplace objet joueur
         this.putPlayer(player.getRow(), player.getColumn());  //place booléen joueur
+        player.setDirection(dir);
     }
 
     private boolean moveAutorised(Direction dir) { //condition de sortie + est ce qu il y a un mur ?
@@ -271,7 +279,7 @@ public class Maze extends Observable {
     }
 
     private void addPlayer(int row, int column) {   //1 seule fois a l'initialisation du jeu
-        Player play = new Player(new Position(row, column));
+        Player play = new Player(new Position(row, column),Direction.UP);
         maze[row][column].setHasPlayer();
         player = play;
     }

@@ -16,9 +16,10 @@ public class Player extends Movable {
      * Constructeur de player, construit le joueur à une position donnée.
      *
      * @param pos la Position du joueur dans le niveau.
+     * @param dir
      */
-    public Player(Position pos) {
-        super(pos);
+    public Player(Position pos,Direction dir) {
+        super(pos,dir);
 
     }
 
