@@ -24,6 +24,9 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 /**
@@ -69,6 +72,19 @@ public class SoloFxController extends Application implements Initializable, Obse
         ThreadEnemy te = new ThreadEnemy(g);
         te.start();
         tp.start();
+        if (g.isLost()){
+            
+            final Stage dialog = new Stage();
+                dialog.initModality(Modality.APPLICATION_MODAL);
+                dialog.initOwner(primaryStage);
+                VBox dialogVbox = new VBox(20);
+                dialogVbox.getChildren().add(new Text("This is a Dialog"));
+                Scene dialogScene = new Scene(dialogVbox, 300, 200);
+                dialog.setScene(dialogScene);
+                dialog.show();
+                System.exit(0);
+            
+        }
 
         scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override

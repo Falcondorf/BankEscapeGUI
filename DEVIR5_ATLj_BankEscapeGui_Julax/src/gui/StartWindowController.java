@@ -47,7 +47,16 @@ public class StartWindowController implements Initializable {
 
     @FXML
     private void handleButtonEdit(ActionEvent event) {
+        try {
 
+            Node node = (Node) event.getSource();
+            Stage stage = (Stage) node.getScene().getWindow();
+            EditorController ec = new EditorController();
+            ec.start(stage);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
