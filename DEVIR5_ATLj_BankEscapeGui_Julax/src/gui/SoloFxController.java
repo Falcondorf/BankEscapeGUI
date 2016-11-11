@@ -164,7 +164,7 @@ public class SoloFxController extends Application implements Initializable, Obse
 
                             img = new ImageView("file:src/images/floor.png");
                             setStaticImage(img, j, i);
-                            img = new ImageView("file:src/images/exit.png");
+                            img = new ImageView("file:src/images/doorEntry.png");
                             setStaticImage(img, j, i);
                         }
                         break;

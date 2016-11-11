@@ -47,6 +47,22 @@ public class EditorController extends Application {
             }
         }
        
+        initRadioButton();
+        
+        root.setSpacing(50);
+        
+        root.getChildren().add(gridPane);
+        root.getChildren().add(info);
+
+        anchor.getChildren().add(root);
+        Parent rootP = anchor;
+        Scene scene = new Scene(rootP);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    private void initRadioButton() {
+        ImageView img;
         ToggleGroup tg = new ToggleGroup();
         RadioButton rbWall = new RadioButton();
         rbWall.setToggleGroup(tg);
@@ -66,54 +82,42 @@ public class EditorController extends Application {
         rbVault.setToggleGroup(tg);
         RadioButton rbKey = new RadioButton();
         rbKey.setToggleGroup(tg);
-
         img = new ImageView("file:src/images/drill.png");
         img.setFitHeight(50);
         img.setFitWidth(50);
         rbDrill.setGraphic(img);
-        
-         img = new ImageView("file:src/images/wall2.png");
+        img = new ImageView("file:src/images/wall2.png");
         img.setFitHeight(50);
         img.setFitWidth(50);
         rbWall.setGraphic(img);
-        
         img = new ImageView("file:src/images/PlayerMovNHD.gif");
         img.setFitHeight(50);
         img.setFitWidth(50);
         rbPlayer.setGraphic(img);
-        
         img = new ImageView("file:src/images/exit.png");
         img.setFitHeight(50);
         img.setFitWidth(50);
         rbExit.setGraphic(img);
-       
         img = new ImageView("file:src/images/doorEntry.png");
         img.setFitHeight(50);
         img.setFitWidth(50);
         rbEntry.setGraphic(img);
-        
         img = new ImageView("file:src/images/floor.png");
         img.setFitHeight(50);
         img.setFitWidth(50);
         rbFloor.setGraphic(img);
-        
         img = new ImageView("file:src/images/guardN.gif");
         img.setFitHeight(50);
         img.setFitWidth(50);
         rbEnemy.setGraphic(img);
-        
         img = new ImageView("file:src/images/key.png");
         img.setFitHeight(50);
         img.setFitWidth(50);
         rbKey.setGraphic(img);
-        
-        
         img = new ImageView("file:src/images/doorVault.png");
         img.setFitHeight(50);
         img.setFitWidth(50);
         rbVault.setGraphic(img);
-        
-        
         info.getChildren().add(rbDrill);
         info.getChildren().add(rbEnemy);
         info.getChildren().add(rbEntry);
@@ -123,23 +127,6 @@ public class EditorController extends Application {
         info.getChildren().add(rbPlayer);
         info.getChildren().add(rbVault);
         info.getChildren().add(rbWall);
-        
-        
-        
-        
-        
-        
-
-        root.setSpacing(50);
-        
-        root.getChildren().add(gridPane);
-        root.getChildren().add(info);
-
-        anchor.getChildren().add(root);
-        Parent rootP = anchor;
-        Scene scene = new Scene(rootP);
-        stage.setScene(scene);
-        stage.show();
     }
     
     
