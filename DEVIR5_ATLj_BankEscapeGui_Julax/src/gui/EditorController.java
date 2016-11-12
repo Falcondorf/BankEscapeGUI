@@ -21,6 +21,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -29,6 +30,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import model.BankEscapeException;
 import model.Direction;
 import model.Maze;
 import model.Square;
@@ -47,8 +49,8 @@ public class EditorController extends Application implements Observer {
     private Button saveButton;
     private ImageView imgRb;
     private String type;
-    private Maze maze;
-    private String levelName = "NiveauWrite.txt";
+    private Maze maze;    
+    private TextField levelChoice;
 
     public EditorController() {
         maze = new Maze(10, 10);
@@ -58,6 +60,7 @@ public class EditorController extends Application implements Observer {
         this.root = new HBox();
         this.info = new VBox(10);
         this.saveButton = new Button("SAVE");
+        this.levelChoice = new TextField("Niveau - ");
     }
 
     @Override
@@ -204,7 +207,9 @@ public class EditorController extends Application implements Observer {
 
                         alert.showAndWait();
                     }
-                } catch (Exception ex) {
+                } catch (FileNotFoundException ex) {
+                    System.out.println("Fichier introuvable");
+                } catch (BankEscapeException ex2){
                     System.out.println("Problème de validation");
                 }
             }
@@ -272,7 +277,9 @@ public class EditorController extends Application implements Observer {
         info.getChildren().add(rbPlayer);
         info.getChildren().add(rbVault);
         info.getChildren().add(rbWall);
+        info.getChildren().add(levelChoice);
         info.getChildren().add(saveButton);
+        
     }
 
     private void loadImgRb(RadioButton rbDrill, RadioButton rbEnemy, RadioButton rbEntry, RadioButton rbExit, RadioButton rbFloor, RadioButton rbKey, RadioButton rbPlayer, RadioButton rbVault, RadioButton rbWall) {
@@ -352,7 +359,7 @@ public class EditorController extends Application implements Observer {
 
     private void writeLevel() throws FileNotFoundException {
 
-        PrintWriter writer = new PrintWriter("levels/" + levelName);
+        PrintWriter writer = new PrintWriter("levels/" + levelChoice.getText()+".txt");
         writer.print(maze.getHeight() + "/" + maze.getWidth() + "/END");
         writer.println("");
         for (int i = 0; i < maze.getWidth(); i++) {

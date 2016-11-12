@@ -49,21 +49,22 @@ public class Maze extends Observable {
         }
     }
 
-    public Direction getEnemyDir(int i , int j) throws BankEscapeException{
-        for(Enemy e : enemyList){
-            if(e.getRow()==i && e.getColumn() ==j){
+    public Direction getEnemyDir(int i, int j) throws BankEscapeException {
+        for (Enemy e : enemyList) {
+            if (e.getRow() == i && e.getColumn() == j) {
                 return e.getDirection();
             }
         }
         throw new BankEscapeException("no enemy here");
     }
-    
-    public Direction getPlayerDir(int i , int j) throws BankEscapeException{
-         if(player.getRow()==i && player.getColumn() ==j){
-                return player.getDirection();
-         }
-          throw new BankEscapeException("no player here");
+
+    public Direction getPlayerDir(int i, int j) throws BankEscapeException {
+        if (player.getRow() == i && player.getColumn() == j) {
+            return player.getDirection();
+        }
+        throw new BankEscapeException("no player here");
     }
+
     public int getWidth() {
         return maze.length;
     }
@@ -72,8 +73,41 @@ public class Maze extends Observable {
         return maze[0].length;
     }
 
-    public Maze(Maze maze) {
-        //todo constructeur copie profonde
+    public Maze(Maze maze, int modifWidth, int modifHeight) throws BankEscapeException {
+        //todo constructeur copie profonde avec modification de dimension
+        for (int i = 0; i < maze.getHeight()+modifWidth; i++) {
+            for (int j = 0; j < maze.getHeight()+modifHeight; j++) {
+                Square s = new Square();
+                this.maze[i][j] = s;
+                switch (maze.getSquares()[i][j].getType()) {
+                    case "wall":
+                        this.maze[i][j].setWall();
+                        break;
+                    case "entry":
+                        this.maze[i][j].setEntry();
+                        break;
+                    case "exit":
+                        this.maze[i][j].setExit();
+                        break;
+                    case "vault":
+                        this.maze[i][j].setVault();
+                        break;
+                    case "floor":
+                        if (this.maze[i][j].hasDrill()){
+                            this.maze[i][j].setHasDrill();
+                        } else if (this.maze[i][j].hasEnemy()){
+                            addEnemy(Direction.UP, i, j);
+                        } else if (this.maze[i][j].hasKey()){
+                            this.maze[i][j].setHasKey();
+                        } else if (this.maze[i][j].hasPlayer()){
+                            addPlayer(i, j);
+                        }
+                        break;
+                    default:
+                        throw new BankEscapeException("Type lu incorrect");
+                }
+            }
+        }
     }
 
     /**
@@ -267,8 +301,8 @@ public class Maze extends Observable {
         setChanged();
         notifyObservers();
     }
-    
-    public void addFloor(int row, int col){
+
+    public void addFloor(int row, int col) {
         maze[row][col].setFloor();
         setChanged();
         notifyObservers();
@@ -293,7 +327,7 @@ public class Maze extends Observable {
     }
 
     public void addPlayer(int row, int column) {   //1 seule fois a l'initialisation du jeu
-        Player play = new Player(new Position(row, column),Direction.UP);
+        Player play = new Player(new Position(row, column), Direction.UP);
         maze[row][column].setHasPlayer();
         player = play;
     }
@@ -335,7 +369,7 @@ public class Maze extends Observable {
         maze[row][column].removeEnemy();
     }
 
-    public boolean isValid() throws BankEscapeException{
+    public boolean isValid() throws BankEscapeException {
         //check mur ou entrée ou sortie autour.
         if (!checkEdge()) {  //si contour invalide ...
             return false;
@@ -344,30 +378,55 @@ public class Maze extends Observable {
             return false;
         }
         //Vérif couloir
-        Position p1 = new Position(player.getRow(),player.getColumn());
-        Position p2 = new Position(5,5);
-        
-        if(!PathFinding.findPath(p1,p2,maze,true,true)){
-           // System.out.println("ALAH OUAKBAR");
+        Position playerPos = new Position(player.getRow(), player.getColumn());        
+        if (!PathFinding.findPath(playerPos, whereIsDrill(), maze, false, false)) {
             return false;
         }
+        if (!PathFinding.findPath(playerPos, whereIsVault(), maze, true, false)) {
+            return false;
+        }
+        if (!PathFinding.findPath(playerPos, whereIsEntry(), maze, true, true)) {
+            return false;
+        }
+        
         System.out.println("oh yeah");
 
         //check Player chemin vers vault(vault considéré comme mur), drill, entrée    
         //check chemin entre clé et sortie secrète OPTIONELLE
         return true;
     }
-    
-    private Position whereIsEntry() throws BankEscapeException{
-        Position entryPos = new Position(0, 0);
+
+    private Position whereIsEntry() throws BankEscapeException {
         for (int i = 0; i < maze.length; i++) {
             for (int j = 0; j < maze[0].length; j++) {
-                if (maze[i][j].getType().equals("entry")){
+                if (maze[i][j].getType().equals("entry")) {
                     return new Position(i, j);
                 }
-            }            
+            }
         }
         throw new BankEscapeException("L'entréé n'a pas été trouvée.");
+    }
+    
+    private Position whereIsVault() throws BankEscapeException {
+        for (int i = 0; i < maze.length; i++) {
+            for (int j = 0; j < maze[0].length; j++) {
+                if (maze[i][j].getType().equals("vault")) {
+                    return new Position(i, j);
+                }
+            }
+        }
+        throw new BankEscapeException("Le coffre-fort n'a pas été trouvée.");
+    }
+    
+    private Position whereIsDrill() throws BankEscapeException {
+        for (int i = 0; i < maze.length; i++) {
+            for (int j = 0; j < maze[0].length; j++) {
+                if (maze[i][j].hasDrill()) {
+                    return new Position(i, j);
+                }
+            }
+        }
+        throw new BankEscapeException("La perçeuse n'a pas été trouvée.");
     }
 
     private boolean atLeastCheck() {
@@ -461,7 +520,6 @@ public class Maze extends Observable {
 
         }
     }
-    
 
     private void readLevel(String nameLv) throws IOException, BankEscapeException {
         int row = 0, col = 0;
