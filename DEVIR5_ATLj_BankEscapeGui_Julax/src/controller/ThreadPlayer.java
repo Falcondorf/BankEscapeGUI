@@ -29,7 +29,7 @@ public class ThreadPlayer extends Thread {
      */
     @Override
     public void run() {
-        while (!g.isLost()) {
+        while (!g.isLost() && !g.endLevel()) {
             System.out.println(g.getMaze());
             try {
                 String str = clavier.next();

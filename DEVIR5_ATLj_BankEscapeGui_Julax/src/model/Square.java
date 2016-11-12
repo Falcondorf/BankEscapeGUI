@@ -44,7 +44,6 @@ public class Square {
      */
     public void setHasPlayer() {
         if (type.equals("floor")) {
-            resetContent();
             this.hasPlayer = true;
         }
     }
@@ -70,7 +69,6 @@ public class Square {
      */
     public void setHasEnemy() {
         if (type.equals("floor")) {
-            resetContent();
             this.hasEnemy = true;
         }
     }

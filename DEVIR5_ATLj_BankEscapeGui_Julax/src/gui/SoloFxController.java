@@ -7,12 +7,15 @@ import java.net.URL;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
@@ -44,7 +47,7 @@ public class SoloFxController extends Application implements Initializable, Obse
 
     @Override
     public void start(Stage primaryStage) throws BankEscapeException, IOException {
-        g = new Game("levels/"+nameLevel);
+        g = new Game(nameLevel);
         g.getMaze().addObserver(SoloFxController.this);
         stage = primaryStage;
         insertImages();
@@ -60,10 +63,6 @@ public class SoloFxController extends Application implements Initializable, Obse
         ThreadEnemy te = new ThreadEnemy(g);
         te.start();
         tp.start();
-        if (g.isLost()) {
-            //display fenetre
-
-        }
 
         scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
@@ -178,13 +177,52 @@ public class SoloFxController extends Application implements Initializable, Obse
 
     @Override
     public void update(Observable o, Object arg) {
-        
+
         Platform.runLater(new Runnable() {
 
             @Override
             public void run() {
                 try {
-                    refreshPane();
+                    if (g.endLevel()) {
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                        alert.setTitle("Niveau Terminé");
+                        alert.setHeaderText("Vous avez réussi!!!");
+                        alert.setContentText("Bravo, vous avez récupéré l'argent et vous êtes enfuis. Quel gredin...");
+
+                        alert.showAndWait();
+                        stackPane.getChildren().clear();
+                        g = new Game(g.getMaze().getNextLevelName());
+                        g.getMaze().addObserver(SoloFxController.this);
+                        try {
+                            insertImages();
+                        } catch (IOException ex) {
+                            System.out.println("ololool");
+                        }
+                        stackPane.getChildren().add(paneStatic);
+                        stackPane.getChildren().add(paneDynamic);
+                        anchor.getChildren().add(stackPane);
+                        Parent root = anchor;
+                        Scene scene = new Scene(root);
+                        stage.setScene(scene);
+                        stage.show();
+
+                        ThreadPlayer tp = new ThreadPlayer(g);
+                        ThreadEnemy te = new ThreadEnemy(g);
+                        te.start();
+                        tp.start();
+                        
+
+                    } else if (!g.isLost()) {
+                        refreshPane();
+                    } else if (g.isLost()) {
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                        alert.setTitle("Game Over");
+                        alert.setHeaderText("GAME OVER !!!");
+                        alert.setContentText("Vous avez perdu... Dommage.");
+
+                        alert.showAndWait();
+                        System.exit(0);
+                    }
                 } catch (BankEscapeException ex) {
                     System.out.println(ex);
                 }

@@ -27,7 +27,7 @@ public class ThreadEnemy extends Thread {
      */
     @Override
     public void run() {
-        while (!g.isLost()) {
+        while (!g.isLost() && !g.endLevel()) {
             try {
                 g.getMaze().autoMoveEnemy();
                 System.out.println(g.getMaze());

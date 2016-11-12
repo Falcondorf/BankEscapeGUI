@@ -54,7 +54,6 @@ public class Game {
     public boolean endLevel() {
         if (this.maze.isEscaped()) {
             try {
-                maze = new Maze(this.maze.getNextLevelName());
                 return true;
             } catch (Exception ex) {
                 System.out.println("ERROR: " + ex);

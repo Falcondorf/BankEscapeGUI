@@ -520,17 +520,17 @@ public class Maze extends Observable {
         StringBuffer buf2 = new StringBuffer();
         StringBuffer buf3 = new StringBuffer();
 
-        BufferedReader br = new BufferedReader(new FileReader(nameLv));
+        BufferedReader br = new BufferedReader(new FileReader("levels/"+nameLv));
         while ((r = br.read()) != '/') {
             buf1.append((char) r);
         }
         while ((r = br.read()) != '/') {
             buf2.append((char) r);
         }
-        while ((r = br.read()) != '\n') {
+        while ((r = br.read()) != '\r') {
             buf3.append((char) r);
         }
-
+        r = br.read();
         this.enemyList = new ArrayList<>();
 
         maze = new Square[Integer.parseInt(buf1.toString())][Integer.parseInt(buf2.toString())];
