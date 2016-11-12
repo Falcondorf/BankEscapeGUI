@@ -13,6 +13,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
@@ -30,13 +31,15 @@ public class StartWindowController implements Initializable {
     private GridPane gridPaneStatic;
 
     @FXML
+    private TextField txtFieldLevel;
+    @FXML
     private void handleButtonSolo(ActionEvent event) throws IOException {
 
         try {
 
             Node node = (Node) event.getSource();
             Stage stage = (Stage) node.getScene().getWindow();
-            SoloFxController sfc = new SoloFxController();
+            SoloFxController sfc = new SoloFxController(txtFieldLevel.getText());
             sfc.start(stage);
 
         } catch (BankEscapeException | IOException e) {

@@ -7,28 +7,17 @@ import java.net.URL;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 /**
@@ -43,17 +32,19 @@ public class SoloFxController extends Application implements Initializable, Obse
     private StackPane stackPane;
     private Game g;
     private Stage stage;
+    private String nameLevel;
 
-    public SoloFxController() {
+    public SoloFxController(String nameLevel) {
         this.anchor = new AnchorPane();
         this.paneStatic = new Pane();
         this.paneDynamic = new Pane();
         this.stackPane = new StackPane();
+        this.nameLevel = nameLevel;
     }
 
     @Override
     public void start(Stage primaryStage) throws BankEscapeException, IOException {
-        g = new Game("levels/Niveau2.txt");
+        g = new Game("levels/"+nameLevel);
         g.getMaze().addObserver(SoloFxController.this);
         stage = primaryStage;
         insertImages();

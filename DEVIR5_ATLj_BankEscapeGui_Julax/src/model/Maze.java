@@ -464,26 +464,18 @@ public class Maze extends Observable {
     private boolean checkEdge() {
 
         for (int i = 0; i < maze[0].length; i++) {//parcours HORI
-            if ((!maze[0][i].getType().equals("wall")
-                    && !maze[0][i].getType().equals("entry")
-                    && !maze[0][i].getType().equals("exit"))) {
+            if (!maze[0][i].getType().equals("wall")){
                 return false;
             }
-            if (!maze[maze.length - 1][i].getType().equals("wall")
-                    && !maze[maze.length - 1][i].getType().equals("entry")
-                    && !maze[maze.length - 1][i].getType().equals("exit")) {
+            if (!maze[maze.length - 1][i].getType().equals("wall")) {
                 return false;
             }
         }
         for (int i = 1; i < maze.length - 1; i++) {//parcours VERTI
-            if ((!maze[i][0].getType().equals("wall")
-                    && !maze[i][0].getType().equals("entry")
-                    && !maze[i][0].getType().equals("exit"))) {
+            if (!maze[i][0].getType().equals("wall")) {
                 return false;
             }
-            if (!maze[i][maze[0].length - 1].getType().equals("wall")
-                    && !maze[i][maze[0].length - 1].getType().equals("entry")
-                    && !maze[i][maze[0].length - 1].getType().equals("exit")) {
+            if (!maze[i][maze[0].length - 1].getType().equals("wall")) {
                 return false;
             }
         }

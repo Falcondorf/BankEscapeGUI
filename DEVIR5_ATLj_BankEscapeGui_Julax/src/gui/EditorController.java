@@ -192,7 +192,7 @@ public class EditorController extends Application implements Observer {
                         alert.setTitle("Invalid Maze");
                         alert.setHeaderText("Seems like you've done something wrong...");
                         alert.setContentText("I must remind you that a maze must"
-                                + " be surrounded by walls(entry or exit are acceptable);\n"
+                                + " be surrounded by walls.\n"
                                 + "Also you must have at least 1 player, 1 drill, "
                                 + "1 vault and 1 entry.");
 
