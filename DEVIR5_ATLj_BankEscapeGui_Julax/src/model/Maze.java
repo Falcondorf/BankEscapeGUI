@@ -292,7 +292,7 @@ public class Maze extends Observable {
         notifyObservers();
     }
 
-    private void addPlayer(int row, int column) {   //1 seule fois a l'initialisation du jeu
+    public void addPlayer(int row, int column) {   //1 seule fois a l'initialisation du jeu
         Player play = new Player(new Position(row, column),Direction.UP);
         maze[row][column].setHasPlayer();
         player = play;
@@ -308,7 +308,7 @@ public class Maze extends Observable {
         maze[row][column].removePlayer();
     }
 
-    private void addEnemy(Direction dir, int row, int column) {   //x fois a l'initialisation du jeu
+    public void addEnemy(Direction dir, int row, int column) {   //x fois a l'initialisation du jeu
         maze[row][column].setHasEnemy();
         enemyList.add(new Enemy(dir, new Position(row, column)));
     }
@@ -344,13 +344,13 @@ public class Maze extends Observable {
             return false;
         }
         //Vérif couloir
-//        Position p1 = new Position(player.getRow(),player.getColumn());
-//        Position p2 = new Position(8,3);
+        Position p1 = new Position(player.getRow(),player.getColumn());
+        Position p2 = new Position(5,5);
 //        
-//        if(!PathFinding.findPath(p1,p2,maze,false,true)){
-//            System.out.println("ALAH OUAKBAR");
-//            return false;
-//        }
+        if(!PathFinding.findPath(p1,p2,maze,true,true)){
+           // System.out.println("ALAH OUAKBAR");
+            return false;
+        }
         System.out.println("oh yeah");
 
         //check Player chemin vers vault(vault considéré comme mur), drill, entrée    
@@ -449,6 +449,7 @@ public class Maze extends Observable {
 
         }
     }
+    
 
     private void readLevel(String nameLv) throws IOException, Exception {
         int row = 0, col = 0;

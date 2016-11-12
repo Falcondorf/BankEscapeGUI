@@ -1,6 +1,9 @@
 package gui;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ConcurrentModificationException;
 import java.util.Observable;
 import java.util.Observer;
@@ -26,6 +29,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import model.Direction;
 import model.Maze;
 import model.Square;
 
@@ -44,6 +48,7 @@ public class EditorController extends Application implements Observer {
     private ImageView imgRb;
     private String type;
     private Maze maze;
+    private String levelName = "NiveauWrite.txt";
 
     public EditorController() {
         maze = new Maze(10, 10);
@@ -147,9 +152,11 @@ public class EditorController extends Application implements Observer {
                                         break;
                                     case "player":
                                         maze.putPlayer(GridPane.getRowIndex(n), GridPane.getColumnIndex(n));
+                                        maze.addPlayer(GridPane.getRowIndex(n), GridPane.getColumnIndex(n));
                                         break;
                                     case "enemy":
                                         maze.putEnemy(GridPane.getRowIndex(n), GridPane.getColumnIndex(n));
+                                        maze.addEnemy(Direction.UP ,GridPane.getRowIndex(n), GridPane.getColumnIndex(n));
                                         break;
                                     case "drill":
                                         maze.putDrill(GridPane.getRowIndex(n), GridPane.getColumnIndex(n));
@@ -188,6 +195,8 @@ public class EditorController extends Application implements Observer {
 
                         alert.showAndWait();
                     } else {
+                        writeLevel();
+
                         Alert alert = new Alert(AlertType.INFORMATION);
                         alert.setTitle("Valid Maze");
                         alert.setHeaderText("Congrats you did well");
@@ -339,6 +348,47 @@ public class EditorController extends Application implements Observer {
             }
 
         });
+    }
+
+    private void writeLevel() throws FileNotFoundException {
+
+        PrintWriter writer = new PrintWriter("levels/" + levelName);
+        writer.print(maze.getHeight() + "/" + maze.getWidth() + "/END");
+        writer.println("");
+        for (int i = 0; i < maze.getWidth(); i++) {
+            for (int j = 0; j < maze.getHeight(); j++) {
+                switch (maze.getSquares()[i][j].getType()) {
+                    case "wall":
+                        writer.print("W");
+                        break;
+                    case "vault":
+                        writer.print("V");
+                        break;
+                    case "exit":
+                        writer.print("S");
+                        break;
+                    case "entry":
+                        writer.print("I");
+                        break;
+                    case "floor":
+                        if (maze.getSquares()[i][j].hasDrill()) {
+                            writer.print("D");
+                        } else if (maze.getSquares()[i][j].hasEnemy()) {
+                            writer.print("E");
+                        } else if (maze.getSquares()[i][j].hasKey()) {
+                            writer.print("K");
+                        } else if (maze.getSquares()[i][j].hasPlayer()) {
+                            writer.print("P");
+                        } else {
+                            writer.print(" ");
+                        }
+                        break;
+                    default:
+                }
+            }
+            writer.println("");
+        }
+        writer.close();
     }
 
     private void initRadioButton() {
