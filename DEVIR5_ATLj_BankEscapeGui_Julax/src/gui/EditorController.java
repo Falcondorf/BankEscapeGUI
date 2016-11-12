@@ -1,6 +1,7 @@
 package gui;
 
 import java.io.IOException;
+import java.util.ConcurrentModificationException;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.logging.Level;
@@ -9,9 +10,11 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.ImageView;
@@ -35,6 +38,7 @@ public class EditorController extends Application implements Observer {
     private Stage stage;
     private HBox root;
     private VBox info;
+    private Button saveButton;
     private ImageView imgRb;
     private String type;
     private Maze maze;
@@ -46,6 +50,7 @@ public class EditorController extends Application implements Observer {
         this.stage = new Stage();
         this.root = new HBox();
         this.info = new VBox();
+        this.saveButton = new Button("SAVE");
     }
 
     @Override
@@ -109,13 +114,10 @@ public class EditorController extends Application implements Observer {
 
             @Override
             public void handle(MouseEvent event) {
-
+                try{
                 for (Node n : gridPane.getChildren()) {
-                    System.out.println("HEY");
                     if (n instanceof ImageView) {
-                        System.out.println("HEY2");
                         if (n.getBoundsInParent().contains(event.getSceneX(), event.getSceneY())) {
-                            System.out.println("PD");
                             // gridPane.clearConstraints(GridPane.getRowIndex(n) ,  GridPane.getColumnIndex(n);
 
                             ImageView img = new ImageView();
@@ -124,7 +126,7 @@ public class EditorController extends Application implements Observer {
                             img.setFitWidth(70);
                             //gridPane.getChildren().remove(event.getPickResult().getIntersectedNode());
                             //gridPane.add(img, GridPane.getColumnIndex(n), GridPane.getRowIndex(n));
-                            
+
                             switch (type) {
                                 case "wall":
                                     maze.addWall(GridPane.getRowIndex(n), GridPane.getColumnIndex(n));
@@ -156,9 +158,36 @@ public class EditorController extends Application implements Observer {
                                 default:
 
                             }
-
+                            try {
+                                if (!maze.isValid()) {
+                                    System.out.println("Pas valide");
+                                } else {
+                                    System.out.println("Valide");
+                                }
+                            } catch (Exception ex) {
+                                System.out.println("Problème de validation");
+                            }
+                            gridPane.getChildren().remove(n); 
                         }
                     }
+                }
+                }catch (ConcurrentModificationException ex){
+                    
+                }
+
+            }
+
+        });
+        
+        saveButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                try {
+                    if (maze.isValid()){
+                        //Lancer le jeu éditer ou le sauvegarder en texte?
+                    }
+                } catch (Exception ex) {
+                    System.out.println("Erreur de validation");
                 }
             }
         });
@@ -331,7 +360,7 @@ public class EditorController extends Application implements Observer {
                         setStaticImage(img, j, i);
                         break;
                     case "floor":
-                        if (maze.getSquares()[i][j].hasDrill()) {
+                        if (maze.getSquares()[j][i].hasDrill()) {
                             img = new ImageView("file:src/images/floor.png");
                             setStaticImage(img, j, i);
                             img = new ImageView("file:src/images/drill.png");
@@ -341,13 +370,13 @@ public class EditorController extends Application implements Observer {
                             setStaticImage(img, j, i);
                             img = new ImageView("file:src/images/guardN.gif");
                             setStaticImage(img, j, i);
-                        } else if (maze.getSquares()[i][j].hasKey()) {
+                        } else if (maze.getSquares()[j][i].hasKey()) {
                             img = new ImageView("file:src/images/floor.png");
                             setStaticImage(img, j, i);
                             img = new ImageView("file:src/images/key.png");
                             setStaticImage(img, j, i);
 
-                        } else if (maze.getSquares()[i][j].hasPlayer()) {
+                        } else if (maze.getSquares()[j][i].hasPlayer()) {
                             img = new ImageView("file:src/images/floor.png");
                             setStaticImage(img, j, i);
                             img = new ImageView("file:src/images/PlayerMovNHD.gif");
@@ -358,7 +387,7 @@ public class EditorController extends Application implements Observer {
                         }
                         break;
                     case "entry":
-                        if (maze.getSquares()[i][j].hasPlayer()) {
+                        if (maze.getSquares()[j][i].hasPlayer()) {
 
                             img = new ImageView("file:src/images/floor.png");
                             setStaticImage(img, j, i);
@@ -390,7 +419,6 @@ public class EditorController extends Application implements Observer {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                System.out.println("Observer");
                 insertImages();
             }
         });

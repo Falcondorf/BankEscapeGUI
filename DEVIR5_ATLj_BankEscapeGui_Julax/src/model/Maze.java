@@ -335,7 +335,7 @@ public class Maze extends Observable {
         maze[row][column].removeEnemy();
     }
 
-    private boolean isValid() throws Exception {
+    public boolean isValid() throws Exception {
         //check mur ou entrée ou sortie autour.
         if (!checkEdge()) {  //si contour invalide ...
             return false;
