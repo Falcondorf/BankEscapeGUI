@@ -7,7 +7,7 @@ import java.util.Observable;
  *
  * @author jackd
  */
-public class Square{
+public class Square {
 
     private String type;
     private boolean hasPlayer;
@@ -20,11 +20,14 @@ public class Square{
      */
     public Square() { //Floor, Wall, Vault, Entry, Exit. ==> Un vault 
         this.type = "floor";        //et une exit fermée ne sont pas reachable.
+        resetContent();
+    }
+
+    private void resetContent() {
         this.hasPlayer = false;
         this.hasDrill = false;
         this.hasEnemy = false;
         this.hasKey = false;
-
     }
 
     /**
@@ -40,7 +43,10 @@ public class Square{
      * Met un joueur dans la case
      */
     public void setHasPlayer() {
-        this.hasPlayer = true;
+        if (type.equals("floor")) {
+            resetContent();
+            this.hasPlayer = true;
+        }
     }
 
     /**
@@ -63,7 +69,10 @@ public class Square{
      * Met un ennemi dans la case.
      */
     public void setHasEnemy() {
-        this.hasEnemy = true;
+        if (type.equals("floor")) {
+            resetContent();
+            this.hasEnemy = true;
+        }
     }
 
     /**
@@ -94,7 +103,10 @@ public class Square{
      * Met une foreuse dans la case.
      */
     public void setHasDrill() {
-        this.hasDrill = true;
+        if (type.equals("floor")) {
+            resetContent();
+            this.hasDrill = true;
+        }
     }
 
     /**
@@ -117,7 +129,10 @@ public class Square{
      * Met une clé dans la case.
      */
     public void setHasKey() {
-        this.hasKey = true;
+        if (type.equals("floor")) {
+            resetContent();
+            this.hasKey = true;
+        }
     }
 
     /**
@@ -155,6 +170,7 @@ public class Square{
      */
     public void setWall() {
         type = "wall";
+        resetContent();
     }
 
     /**
@@ -162,6 +178,7 @@ public class Square{
      */
     public void setVault() {
         type = "vault";
+        resetContent();
     }
 
     /**
@@ -169,6 +186,7 @@ public class Square{
      */
     public void setFloor() {
         type = "floor";
+        resetContent();
     }
 
     /**
@@ -176,6 +194,7 @@ public class Square{
      */
     public void setEntry() {
         type = "entry";
+        resetContent();
     }
 
     /**
@@ -183,6 +202,7 @@ public class Square{
      */
     public void setExit() {
         type = "exit";
+        resetContent();
     }
 
 }

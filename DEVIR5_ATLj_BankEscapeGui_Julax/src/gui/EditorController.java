@@ -14,6 +14,8 @@ import javafx.event.EventType;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
@@ -49,7 +51,7 @@ public class EditorController extends Application implements Observer {
         this.gridPane = new GridPane();
         this.stage = new Stage();
         this.root = new HBox();
-        this.info = new VBox();
+        this.info = new VBox(10);
         this.saveButton = new Button("SAVE");
     }
 
@@ -114,80 +116,87 @@ public class EditorController extends Application implements Observer {
 
             @Override
             public void handle(MouseEvent event) {
-                try{
-                for (Node n : gridPane.getChildren()) {
-                    if (n instanceof ImageView) {
-                        if (n.getBoundsInParent().contains(event.getSceneX(), event.getSceneY())) {
-                            // gridPane.clearConstraints(GridPane.getRowIndex(n) ,  GridPane.getColumnIndex(n);
+                try {
+                    for (Node n : gridPane.getChildren()) {
+                        if (n instanceof ImageView) {
+                            if (n.getBoundsInParent().contains(event.getSceneX(), event.getSceneY())) {
+                                // gridPane.clearConstraints(GridPane.getRowIndex(n) ,  GridPane.getColumnIndex(n);
 
-                            ImageView img = new ImageView();
-                            img = imgRb;
-                            img.setFitHeight(70);
-                            img.setFitWidth(70);
-                            //gridPane.getChildren().remove(event.getPickResult().getIntersectedNode());
-                            //gridPane.add(img, GridPane.getColumnIndex(n), GridPane.getRowIndex(n));
+                                ImageView img = new ImageView();
+                                img = imgRb;
+                                img.setFitHeight(70);
+                                img.setFitWidth(70);
+                                //gridPane.getChildren().remove(event.getPickResult().getIntersectedNode());
+                                //gridPane.add(img, GridPane.getColumnIndex(n), GridPane.getRowIndex(n));
 
-                            switch (type) {
-                                case "wall":
-                                    maze.addWall(GridPane.getRowIndex(n), GridPane.getColumnIndex(n));
-                                    break;
-                                case "floor":
-                                    maze.addFloor(GridPane.getRowIndex(n), GridPane.getColumnIndex(n));
-                                    break;
-                                case "vault":
-                                    maze.addVault(GridPane.getRowIndex(n), GridPane.getColumnIndex(n));
-                                    break;
-                                case "entry":
-                                    maze.addEntry(GridPane.getRowIndex(n), GridPane.getColumnIndex(n));
-                                    break;
-                                case "exit":
-                                    maze.addExit(GridPane.getRowIndex(n), GridPane.getColumnIndex(n));
-                                    break;
-                                case "player":
-                                    maze.putPlayer(GridPane.getRowIndex(n), GridPane.getColumnIndex(n));
-                                    break;
-                                case "enemy":
-                                    maze.putEnemy(GridPane.getRowIndex(n), GridPane.getColumnIndex(n));
-                                    break;
-                                case "drill":
-                                    maze.putDrill(GridPane.getRowIndex(n), GridPane.getColumnIndex(n));
-                                    break;
-                                case "key":
-                                    maze.putKey(GridPane.getRowIndex(n), GridPane.getColumnIndex(n));
-                                    break;
-                                default:
+                                switch (type) {
+                                    case "wall":
+                                        maze.addWall(GridPane.getRowIndex(n), GridPane.getColumnIndex(n));
+                                        break;
+                                    case "floor":
+                                        maze.addFloor(GridPane.getRowIndex(n), GridPane.getColumnIndex(n));
+                                        break;
+                                    case "vault":
+                                        maze.addVault(GridPane.getRowIndex(n), GridPane.getColumnIndex(n));
+                                        break;
+                                    case "entry":
+                                        maze.addEntry(GridPane.getRowIndex(n), GridPane.getColumnIndex(n));
+                                        break;
+                                    case "exit":
+                                        maze.addExit(GridPane.getRowIndex(n), GridPane.getColumnIndex(n));
+                                        break;
+                                    case "player":
+                                        maze.putPlayer(GridPane.getRowIndex(n), GridPane.getColumnIndex(n));
+                                        break;
+                                    case "enemy":
+                                        maze.putEnemy(GridPane.getRowIndex(n), GridPane.getColumnIndex(n));
+                                        break;
+                                    case "drill":
+                                        maze.putDrill(GridPane.getRowIndex(n), GridPane.getColumnIndex(n));
+                                        break;
+                                    case "key":
+                                        maze.putKey(GridPane.getRowIndex(n), GridPane.getColumnIndex(n));
+                                        break;
+                                    default:
 
-                            }
-                            try {
-                                if (!maze.isValid()) {
-                                    System.out.println("Pas valide");
-                                } else {
-                                    System.out.println("Valide");
                                 }
-                            } catch (Exception ex) {
-                                System.out.println("Problème de validation");
+
+                                gridPane.getChildren().remove(n);
                             }
-                            gridPane.getChildren().remove(n); 
                         }
                     }
-                }
-                }catch (ConcurrentModificationException ex){
-                    
+                } catch (ConcurrentModificationException ex) {
+
                 }
 
             }
 
         });
-        
+
         saveButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 try {
-                    if (maze.isValid()){
-                        //Lancer le jeu éditer ou le sauvegarder en texte?
+                    if (!maze.isValid()) {
+                        Alert alert = new Alert(AlertType.INFORMATION);
+                        alert.setTitle("Invalid Maze");
+                        alert.setHeaderText("Seems like you've done something wrong...");
+                        alert.setContentText("I must remind you that a maze must"
+                                + " be surrounded by walls(entry or exit are acceptable);\n"
+                                + "Also you must have at least 1 player, 1 drill, "
+                                + "1 vault and 1 entry.");
+
+                        alert.showAndWait();
+                    } else {
+                        Alert alert = new Alert(AlertType.INFORMATION);
+                        alert.setTitle("Valid Maze");
+                        alert.setHeaderText("Congrats you did well");
+                        alert.setContentText("Your Maze is just puuuurfect");
+
+                        alert.showAndWait();
                     }
                 } catch (Exception ex) {
-                    System.out.println("Erreur de validation");
+                    System.out.println("Problème de validation");
                 }
             }
         });
@@ -254,6 +263,7 @@ public class EditorController extends Application implements Observer {
         info.getChildren().add(rbPlayer);
         info.getChildren().add(rbVault);
         info.getChildren().add(rbWall);
+        info.getChildren().add(saveButton);
     }
 
     private void loadImgRb(RadioButton rbDrill, RadioButton rbEnemy, RadioButton rbEntry, RadioButton rbExit, RadioButton rbFloor, RadioButton rbKey, RadioButton rbPlayer, RadioButton rbVault, RadioButton rbWall) {
@@ -365,7 +375,7 @@ public class EditorController extends Application implements Observer {
                             setStaticImage(img, j, i);
                             img = new ImageView("file:src/images/drill.png");
                             setStaticImage(img, j, i);
-                        } else if (maze.getSquares()[i][j].hasEnemy()) {
+                        } else if (maze.getSquares()[j][i].hasEnemy()) {
                             img = new ImageView("file:src/images/floor.png");
                             setStaticImage(img, j, i);
                             img = new ImageView("file:src/images/guardN.gif");
@@ -392,7 +402,6 @@ public class EditorController extends Application implements Observer {
                             img = new ImageView("file:src/images/floor.png");
                             setStaticImage(img, j, i);
                         } else {
-
                             img = new ImageView("file:src/images/floor.png");
                             setStaticImage(img, j, i);
                             img = new ImageView("file:src/images/doorEntry.png");
