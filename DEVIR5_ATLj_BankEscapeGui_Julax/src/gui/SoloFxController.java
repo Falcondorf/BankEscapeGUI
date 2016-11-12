@@ -7,6 +7,8 @@ import java.net.URL;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -50,12 +52,7 @@ public class SoloFxController extends Application implements Initializable, Obse
     }
 
     @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) throws BankEscapeException, IOException {
         g = new Game("levels/Niveau2.txt");
         g.getMaze().addObserver(SoloFxController.this);
         stage = primaryStage;
@@ -72,9 +69,9 @@ public class SoloFxController extends Application implements Initializable, Obse
         ThreadEnemy te = new ThreadEnemy(g);
         te.start();
         tp.start();
-        if (g.isLost()){
+        if (g.isLost()) {
             //display fenetre
-            
+
         }
 
         scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
@@ -190,12 +187,16 @@ public class SoloFxController extends Application implements Initializable, Obse
 
     @Override
     public void update(Observable o, Object arg) {
-        System.out.println("observer");
+        
         Platform.runLater(new Runnable() {
 
             @Override
             public void run() {
-                refreshPane();
+                try {
+                    refreshPane();
+                } catch (BankEscapeException ex) {
+                    System.out.println(ex);
+                }
                 stage.show();
             }
 
@@ -203,7 +204,7 @@ public class SoloFxController extends Application implements Initializable, Obse
 
     }
 
-    private void refreshPane() {
+    private void refreshPane() throws BankEscapeException {
         paneDynamic.getChildren().clear();
         for (int i = 0; i < g.getMaze().getSquares().length; i++) {
             for (int j = 0; j < g.getMaze().getSquares()[0].length; j++) {
@@ -356,6 +357,10 @@ public class SoloFxController extends Application implements Initializable, Obse
             //  str += "\n";
         }
 
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
     }
 
 }

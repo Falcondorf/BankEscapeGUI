@@ -41,7 +41,7 @@ public class Maze extends Observable {
         }
     }
 
-    public Maze(String nameLevel) throws Exception {
+    public Maze(String nameLevel) throws BankEscapeException {
         try {
             readLevel(nameLevel);
         } catch (IOException ex) {
@@ -49,20 +49,20 @@ public class Maze extends Observable {
         }
     }
 
-    public Direction getEnemyDir(int i , int j){
+    public Direction getEnemyDir(int i , int j) throws BankEscapeException{
         for(Enemy e : enemyList){
             if(e.getRow()==i && e.getColumn() ==j){
                 return e.getDirection();
             }
         }
-        throw new NullPointerException("no enemy here");
+        throw new BankEscapeException("no enemy here");
     }
     
-    public Direction getPlayerDir(int i , int j){
+    public Direction getPlayerDir(int i , int j) throws BankEscapeException{
          if(player.getRow()==i && player.getColumn() ==j){
                 return player.getDirection();
          }
-          throw new NullPointerException("no player here");
+          throw new BankEscapeException("no player here");
     }
     public int getWidth() {
         return maze.length;
@@ -335,7 +335,7 @@ public class Maze extends Observable {
         maze[row][column].removeEnemy();
     }
 
-    public boolean isValid() throws Exception {
+    public boolean isValid() throws BankEscapeException{
         //check mur ou entrée ou sortie autour.
         if (!checkEdge()) {  //si contour invalide ...
             return false;
@@ -346,7 +346,7 @@ public class Maze extends Observable {
         //Vérif couloir
         Position p1 = new Position(player.getRow(),player.getColumn());
         Position p2 = new Position(5,5);
-//        
+        
         if(!PathFinding.findPath(p1,p2,maze,true,true)){
            // System.out.println("ALAH OUAKBAR");
             return false;
@@ -356,6 +356,18 @@ public class Maze extends Observable {
         //check Player chemin vers vault(vault considéré comme mur), drill, entrée    
         //check chemin entre clé et sortie secrète OPTIONELLE
         return true;
+    }
+    
+    private Position whereIsEntry() throws BankEscapeException{
+        Position entryPos = new Position(0, 0);
+        for (int i = 0; i < maze.length; i++) {
+            for (int j = 0; j < maze[0].length; j++) {
+                if (maze[i][j].getType().equals("entry")){
+                    return new Position(i, j);
+                }
+            }            
+        }
+        throw new BankEscapeException("L'entréé n'a pas été trouvée.");
     }
 
     private boolean atLeastCheck() {
@@ -451,7 +463,7 @@ public class Maze extends Observable {
     }
     
 
-    private void readLevel(String nameLv) throws IOException, Exception {
+    private void readLevel(String nameLv) throws IOException, BankEscapeException {
         int row = 0, col = 0;
         int r;
         StringBuffer buf1 = new StringBuffer();
@@ -518,13 +530,13 @@ public class Maze extends Observable {
                 case '\r':
                     break;
                 default:
-                    throw new IllegalArgumentException("invalid character");
+                    throw new BankEscapeException("invalid character");
             }
 
             ++col;
         }
         if (!isValid()) {
-            throw new IllegalArgumentException("Unvalid maze architecture");
+            throw new BankEscapeException("Unvalid maze architecture");
         }
     }
 

@@ -25,7 +25,7 @@ public class PathFinding {
         return false;
     }
 
-    private static boolean verifWall() throws Exception {
+    private static boolean verifWall() throws BankEscapeException {
         switch (nose) {
             case UP:
                 return (currPos.getRow() - 1 > 0) && maze[currPos.getRow() - 1][currPos.getColumn()].getType().equals("floor");
@@ -36,7 +36,7 @@ public class PathFinding {
             case RIGHT:
                 return (currPos.getColumn() + 1 < maze.length - 1) && maze[currPos.getRow()][currPos.getColumn() + 1].getType().equals("floor");
             default:
-                throw new Exception("wrong direction");
+                throw new BankEscapeException("wrong direction");
 
         }
     }
@@ -88,7 +88,7 @@ public class PathFinding {
         }
     }
 
-    private static boolean verifLeftArm(boolean lookExit, boolean lookVault) throws Exception {
+    private static boolean verifLeftArm(boolean lookExit, boolean lookVault) throws BankEscapeException {
         switch (nose) {
             case UP:
                 return (currPos.getColumn() - 1 > 0) && maze[currPos.getRow()][currPos.getColumn() - 1].isReachable(lookExit, lookVault);
@@ -99,14 +99,14 @@ public class PathFinding {
             case RIGHT:
                 return (currPos.getRow() - 1 < maze.length - 1) && maze[currPos.getRow() - 1][currPos.getColumn()].isReachable(lookExit, lookVault);
             default:
-                throw new Exception("wrong direction");
+                throw new BankEscapeException("wrong direction");
 
         }
     }
 
     public static boolean findPath(Position p1, Position p2,
             Square[][] maze, boolean searchVault, boolean searchExit)
-            throws Exception {
+            throws BankEscapeException{
         currPos = p1;
         objPos = p2;
         save = new ArrayList<>();

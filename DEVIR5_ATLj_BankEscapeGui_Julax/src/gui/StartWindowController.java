@@ -39,8 +39,8 @@ public class StartWindowController implements Initializable {
             SoloFxController sfc = new SoloFxController();
             sfc.start(stage);
 
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (BankEscapeException | IOException e) {
+            System.out.println(e);
         }
 
     }
@@ -55,7 +55,7 @@ public class StartWindowController implements Initializable {
             ec.start(stage);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println(e);
         }
     }
 

@@ -16,14 +16,15 @@ public class Game {
      * le niveau
      *
      * @param nameFirstLevel Le nom du niveau
+     * @throws model.BankEscapeException
      * @throws IOException Si une lecture est erronée
      */
-    public Game(String nameFirstLevel) throws IOException {
+    public Game(String nameFirstLevel) throws BankEscapeException {
         // trouver moyen de construire le maze avant la lecture de fichier 
         try {
             maze = new Maze(nameFirstLevel);
         } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
+            throw new BankEscapeException(e.getMessage());
         }
 
     }

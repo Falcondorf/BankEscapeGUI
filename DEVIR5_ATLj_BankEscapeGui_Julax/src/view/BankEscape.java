@@ -33,7 +33,7 @@ public class BankEscape {
                 }
             }
 
-        } catch (IOException | RuntimeException ex) {
+        } catch (BankEscapeException ex) {
             System.out.println(ex);
         }
 
