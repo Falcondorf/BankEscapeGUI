@@ -92,7 +92,7 @@ public class Maze extends Observable {
         }
     }
 
-    public Square[][] getSquare() {
+    public Square[][] getSquares() {
         return maze;
     }
 
@@ -262,20 +262,34 @@ public class Maze extends Observable {
         }
     }
 
-    private void addWall(int row, int column) {
+    public void addWall(int row, int column) {
         maze[row][column].setWall();
+        setChanged();
+        notifyObservers();
+    }
+    
+    public void addFloor(int row, int col){
+        maze[row][col].setFloor();
+        setChanged();
+        notifyObservers();
     }
 
-    private void addVault(int row, int column) {
+    public void addVault(int row, int column) {
         maze[row][column].setVault();
+        setChanged();
+        notifyObservers();
     }
 
-    private void addEntry(int row, int column) {
+    public void addEntry(int row, int column) {
         maze[row][column].setEntry();
+        setChanged();
+        notifyObservers();
     }
 
-    private void addExit(int row, int column) {
+    public void addExit(int row, int column) {
         maze[row][column].setExit();
+        setChanged();
+        notifyObservers();
     }
 
     private void addPlayer(int row, int column) {   //1 seule fois a l'initialisation du jeu
@@ -284,11 +298,13 @@ public class Maze extends Observable {
         player = play;
     }
 
-    private void putPlayer(int row, int column) {  //a chaque fois qu on bouge
+    public void putPlayer(int row, int column) {  //a chaque fois qu on bouge
         maze[row][column].setHasPlayer();
+        setChanged();
+        notifyObservers();
     }
 
-    private void removePlayer(int row, int column) {
+    public void removePlayer(int row, int column) {
         maze[row][column].removePlayer();
     }
 
@@ -297,16 +313,22 @@ public class Maze extends Observable {
         enemyList.add(new Enemy(dir, new Position(row, column)));
     }
 
-    private void putEnemy(int row, int column) {
+    public void putEnemy(int row, int column) {
         maze[row][column].setHasEnemy();
+        setChanged();
+        notifyObservers();
     }
 
-    private void putDrill(int row, int column) {
+    public void putDrill(int row, int column) {
         maze[row][column].setHasDrill();
+        setChanged();
+        notifyObservers();
     }
 
-    private void putKey(int row, int column) {
+    public void putKey(int row, int column) {
         maze[row][column].setHasKey();
+        setChanged();
+        notifyObservers();
     }
 
     private void removeEnemy(int row, int column) {

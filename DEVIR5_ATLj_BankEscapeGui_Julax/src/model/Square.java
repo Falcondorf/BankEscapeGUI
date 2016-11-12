@@ -1,11 +1,13 @@
 package model;
 
+import java.util.Observable;
+
 /**
  * Classe représentant une case du plateau de jeu.
  *
  * @author jackd
  */
-public class Square {
+public class Square{
 
     private String type;
     private boolean hasPlayer;

@@ -1,12 +1,17 @@
 package gui;
 
+import java.io.IOException;
+import java.util.Observable;
+import java.util.Observer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.ImageView;
@@ -16,12 +21,14 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import model.Maze;
+import model.Square;
 
 /**
  *
  * @author jackd
  */
-public class EditorController extends Application {
+public class EditorController extends Application implements Observer {
 
     private AnchorPane anchor;
     private GridPane gridPane;
@@ -29,8 +36,11 @@ public class EditorController extends Application {
     private HBox root;
     private VBox info;
     private ImageView imgRb;
+    private String type;
+    private Maze maze;
 
     public EditorController() {
+        maze = new Maze(10, 10);
         this.anchor = new AnchorPane();
         this.gridPane = new GridPane();
         this.stage = new Stage();
@@ -40,25 +50,31 @@ public class EditorController extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        for (int i = 0; i < maze.getWidth(); i++) {
+            for (int j = 0; j < maze.getHeight(); j++) {
+                maze.addObserver(EditorController.this);
+            }
 
+        }
         gridPane.setHgap(3);
         gridPane.setVgap(3);
 
         ImageView img;
 
-        for (int i = 0; i < 10; i++) {
-            for (int j = 0; j < 10; j++) {
-                img = new ImageView("file:src/images/floor.png");
-                setStaticImage(img, i, j);
-            }
-        }
-
+        insertImages();
+//        for (int i = 0; i < 10; i++) {
+//            for (int j = 0; j < 10; j++) {
+//                img = new ImageView("file:src/images/floor.png");
+//                setStaticImage(img, i, j);
+//            }
+//        }
         ToggleGroup tg = new ToggleGroup();
 
         RadioButton rbWall = new RadioButton();
         rbWall.setToggleGroup(tg);
         RadioButton rbFloor = new RadioButton();
         rbFloor.setToggleGroup(tg);
+        rbFloor.setSelected(true);
         RadioButton rbExit = new RadioButton();
         rbExit.setToggleGroup(tg);
         RadioButton rbDrill = new RadioButton();
@@ -90,20 +106,56 @@ public class EditorController extends Application {
 //            }
 //        });
         gridPane.addEventFilter(MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
+
             @Override
             public void handle(MouseEvent event) {
 
                 for (Node n : gridPane.getChildren()) {
+                    System.out.println("HEY");
                     if (n instanceof ImageView) {
+                        System.out.println("HEY2");
                         if (n.getBoundsInParent().contains(event.getSceneX(), event.getSceneY())) {
+                            System.out.println("PD");
                             // gridPane.clearConstraints(GridPane.getRowIndex(n) ,  GridPane.getColumnIndex(n);
-                            
+
                             ImageView img = new ImageView();
-                            img=imgRb;
+                            img = imgRb;
                             img.setFitHeight(70);
                             img.setFitWidth(70);
-                            gridPane.getChildren().remove(event.getPickResult().getIntersectedNode());
-                            gridPane.add(img, GridPane.getColumnIndex(n), GridPane.getRowIndex(n));
+                            //gridPane.getChildren().remove(event.getPickResult().getIntersectedNode());
+                            //gridPane.add(img, GridPane.getColumnIndex(n), GridPane.getRowIndex(n));
+                            
+                            switch (type) {
+                                case "wall":
+                                    maze.addWall(GridPane.getRowIndex(n), GridPane.getColumnIndex(n));
+                                    break;
+                                case "floor":
+                                    maze.addFloor(GridPane.getRowIndex(n), GridPane.getColumnIndex(n));
+                                    break;
+                                case "vault":
+                                    maze.addVault(GridPane.getRowIndex(n), GridPane.getColumnIndex(n));
+                                    break;
+                                case "entry":
+                                    maze.addEntry(GridPane.getRowIndex(n), GridPane.getColumnIndex(n));
+                                    break;
+                                case "exit":
+                                    maze.addExit(GridPane.getRowIndex(n), GridPane.getColumnIndex(n));
+                                    break;
+                                case "player":
+                                    maze.putPlayer(GridPane.getRowIndex(n), GridPane.getColumnIndex(n));
+                                    break;
+                                case "enemy":
+                                    maze.putEnemy(GridPane.getRowIndex(n), GridPane.getColumnIndex(n));
+                                    break;
+                                case "drill":
+                                    maze.putDrill(GridPane.getRowIndex(n), GridPane.getColumnIndex(n));
+                                    break;
+                                case "key":
+                                    maze.putKey(GridPane.getRowIndex(n), GridPane.getColumnIndex(n));
+                                    break;
+                                default:
+
+                            }
 
                         }
                     }
@@ -180,6 +232,7 @@ public class EditorController extends Application {
             @Override
             public void handle(ActionEvent event) {
                 imgRb = new ImageView("file:src/images/drill.png");
+                type = "drill";
             }
 
         });
@@ -187,6 +240,7 @@ public class EditorController extends Application {
             @Override
             public void handle(ActionEvent event) {
                 imgRb = new ImageView("file:src/images/guardN.gif");
+                type = "enemy";
             }
 
         });
@@ -194,6 +248,7 @@ public class EditorController extends Application {
             @Override
             public void handle(ActionEvent event) {
                 imgRb = new ImageView("file:src/images/doorEntry.png");
+                type = "entry";
             }
 
         });
@@ -201,6 +256,7 @@ public class EditorController extends Application {
             @Override
             public void handle(ActionEvent event) {
                 imgRb = new ImageView("file:src/images/exit.png");
+                type = "exit";
             }
 
         });
@@ -208,6 +264,7 @@ public class EditorController extends Application {
             @Override
             public void handle(ActionEvent event) {
                 imgRb = new ImageView("file:src/images/floor.png");
+                type = "floor";
             }
 
         });
@@ -215,6 +272,7 @@ public class EditorController extends Application {
             @Override
             public void handle(ActionEvent event) {
                 imgRb = new ImageView("file:src/images/key.png");
+                type = "key";
             }
 
         });
@@ -222,6 +280,7 @@ public class EditorController extends Application {
             @Override
             public void handle(ActionEvent event) {
                 imgRb = new ImageView("file:src/images/PlayerMovNHD.gif");
+                type = "player";
             }
 
         });
@@ -229,6 +288,7 @@ public class EditorController extends Application {
             @Override
             public void handle(ActionEvent event) {
                 imgRb = new ImageView("file:src/images/vault.png");
+                type = "vault";
             }
 
         });
@@ -236,6 +296,7 @@ public class EditorController extends Application {
             @Override
             public void handle(ActionEvent event) {
                 imgRb = new ImageView("file:src/images/wall2.png");
+                type = "wall";
             }
 
         });
@@ -251,6 +312,88 @@ public class EditorController extends Application {
         img.setX(j * 70);
         img.setY(i * 70);
         this.gridPane.add(img, i, j);
+    }
+
+    private void insertImages() {
+        for (int i = 0; i < maze.getWidth(); i++) {
+            for (int j = 0; j < maze.getHeight(); j++) {
+                ImageView img = new ImageView();
+                switch (maze.getSquares()[j][i].getType()) {
+                    case "wall":
+                        // img = new ImageView(new Image(StartWindowController.class.getResourceAsStream(".\\src\\images\\sis.jpg")));
+                        img = new ImageView("file:src/images/wall2.png");
+                        setStaticImage(img, j, i);
+                        break;
+                    case "exit":
+                        img = new ImageView("file:src/images/floor.png");
+                        setStaticImage(img, j, i);
+                        img = new ImageView("file:src/images/exit.png");
+                        setStaticImage(img, j, i);
+                        break;
+                    case "floor":
+                        if (maze.getSquares()[i][j].hasDrill()) {
+                            img = new ImageView("file:src/images/floor.png");
+                            setStaticImage(img, j, i);
+                            img = new ImageView("file:src/images/drill.png");
+                            setStaticImage(img, j, i);
+                        } else if (maze.getSquares()[i][j].hasEnemy()) {
+                            img = new ImageView("file:src/images/floor.png");
+                            setStaticImage(img, j, i);
+                            img = new ImageView("file:src/images/guardN.gif");
+                            setStaticImage(img, j, i);
+                        } else if (maze.getSquares()[i][j].hasKey()) {
+                            img = new ImageView("file:src/images/floor.png");
+                            setStaticImage(img, j, i);
+                            img = new ImageView("file:src/images/key.png");
+                            setStaticImage(img, j, i);
+
+                        } else if (maze.getSquares()[i][j].hasPlayer()) {
+                            img = new ImageView("file:src/images/floor.png");
+                            setStaticImage(img, j, i);
+                            img = new ImageView("file:src/images/PlayerMovNHD.gif");
+                            setStaticImage(img, j, i);
+                        } else {
+                            img = new ImageView("file:src/images/floor.png");
+                            setStaticImage(img, j, i);
+                        }
+                        break;
+                    case "entry":
+                        if (maze.getSquares()[i][j].hasPlayer()) {
+
+                            img = new ImageView("file:src/images/floor.png");
+                            setStaticImage(img, j, i);
+                        } else {
+
+                            img = new ImageView("file:src/images/floor.png");
+                            setStaticImage(img, j, i);
+                            img = new ImageView("file:src/images/doorEntry.png");
+                            setStaticImage(img, j, i);
+                        }
+                        break;
+                    case "vault":
+                        img = new ImageView("file:src/images/vault.png");
+                        setStaticImage(img, j, i);
+                        break;
+                    default:
+                        System.out.println("Error : invalid element read ");
+                }
+                // setStaticImage(img, j, i);
+
+            }
+            //  str += "\n";
+        }
+
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("Observer");
+                insertImages();
+            }
+        });
 
     }
 
