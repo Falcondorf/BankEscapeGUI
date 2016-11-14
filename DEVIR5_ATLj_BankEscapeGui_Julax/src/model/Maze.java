@@ -75,38 +75,48 @@ public class Maze extends Observable {
 
     public Maze(Maze maze, int modifWidth, int modifHeight) throws BankEscapeException {
         //todo constructeur copie profonde avec modification de dimension
-        for (int i = 0; i < maze.getHeight()+modifWidth; i++) {
-            for (int j = 0; j < maze.getHeight()+modifHeight; j++) {
-                Square s = new Square();
-                this.maze[i][j] = s;
-                switch (maze.getSquares()[i][j].getType()) {
-                    case "wall":
-                        this.maze[i][j].setWall();
-                        break;
-                    case "entry":
-                        this.maze[i][j].setEntry();
-                        break;
-                    case "exit":
-                        this.maze[i][j].setExit();
-                        break;
-                    case "vault":
-                        this.maze[i][j].setVault();
-                        break;
-                    case "floor":
-                        if (this.maze[i][j].hasDrill()){
-                            this.maze[i][j].setHasDrill();
-                        } else if (this.maze[i][j].hasEnemy()){
-                            addEnemy(Direction.UP, i, j);
-                        } else if (this.maze[i][j].hasKey()){
-                            this.maze[i][j].setHasKey();
-                        } else if (this.maze[i][j].hasPlayer()){
-                            addPlayer(i, j);
+        this.enemyList = new ArrayList<>();
+        this.maze = new Square[maze.getHeight() + modifHeight][maze.getWidth() + modifWidth];
+        for (int i = 0; i < maze.getWidth() + modifWidth; i++) {
+            if (maze.getSquares()[0].length < i) {
+                for (int j = 0; j < maze.getHeight() + modifHeight; j++) {
+                    Square s = new Square();
+                    // Maze otherMaze = new Maze(maze.getHeight()+modifHeight, maze.getWidth()+modifWidth);
+
+                    this.maze[i][j] = s;
+                    if (maze.getSquares().length < j) {
+                        switch (maze.getSquares()[i][j].getType()) {
+                            case "wall":
+                                this.maze[i][j].setWall();
+                                break;
+                            case "entry":
+                                this.maze[i][j].setEntry();
+                                break;
+                            case "exit":
+                                this.maze[i][j].setExit();
+                                break;
+                            case "vault":
+                                this.maze[i][j].setVault();
+                                break;
+                            case "floor":
+                                if (this.maze[i][j].hasDrill()) {
+                                    this.maze[i][j].setHasDrill();
+                                } else if (this.maze[i][j].hasEnemy()) {
+                                    addEnemy(Direction.UP, i, j);
+                                } else if (this.maze[i][j].hasKey()) {
+                                    this.maze[i][j].setHasKey();
+                                } else if (this.maze[i][j].hasPlayer()) {
+                                    addPlayer(i, j);
+                                }
+                                break;
+                            default:
+                                throw new BankEscapeException("Type lu incorrect");
                         }
-                        break;
-                    default:
-                        throw new BankEscapeException("Type lu incorrect");
+                    }
+
                 }
             }
+
         }
     }
 
@@ -378,7 +388,7 @@ public class Maze extends Observable {
             return false;
         }
         //Vérif couloir
-        Position playerPos = new Position(player.getRow(), player.getColumn());        
+        Position playerPos = new Position(player.getRow(), player.getColumn());
         if (!PathFinding.findPath(playerPos, whereIsDrill(), maze, false, false)) {
             return false;
         }
@@ -388,7 +398,7 @@ public class Maze extends Observable {
         if (!PathFinding.findPath(playerPos, whereIsEntry(), maze, true, true)) {
             return false;
         }
-        
+
         System.out.println("oh yeah");
 
         //check Player chemin vers vault(vault considéré comme mur), drill, entrée    
@@ -406,7 +416,7 @@ public class Maze extends Observable {
         }
         throw new BankEscapeException("L'entréé n'a pas été trouvée.");
     }
-    
+
     private Position whereIsVault() throws BankEscapeException {
         for (int i = 0; i < maze.length; i++) {
             for (int j = 0; j < maze[0].length; j++) {
@@ -417,7 +427,7 @@ public class Maze extends Observable {
         }
         throw new BankEscapeException("Le coffre-fort n'a pas été trouvée.");
     }
-    
+
     private Position whereIsDrill() throws BankEscapeException {
         for (int i = 0; i < maze.length; i++) {
             for (int j = 0; j < maze[0].length; j++) {
@@ -464,7 +474,7 @@ public class Maze extends Observable {
     private boolean checkEdge() {
 
         for (int i = 0; i < maze[0].length; i++) {//parcours HORI
-            if (!maze[0][i].getType().equals("wall")){
+            if (!maze[0][i].getType().equals("wall")) {
                 return false;
             }
             if (!maze[maze.length - 1][i].getType().equals("wall")) {
@@ -520,7 +530,7 @@ public class Maze extends Observable {
         StringBuffer buf2 = new StringBuffer();
         StringBuffer buf3 = new StringBuffer();
 
-        BufferedReader br = new BufferedReader(new FileReader("levels/"+nameLv));
+        BufferedReader br = new BufferedReader(new FileReader("levels/" + nameLv));
         while ((r = br.read()) != '/') {
             buf1.append((char) r);
         }
