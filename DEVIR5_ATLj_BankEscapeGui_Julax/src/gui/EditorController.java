@@ -1,8 +1,6 @@
 package gui;
 
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ConcurrentModificationException;
 import java.util.Observable;
@@ -13,7 +11,6 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.event.EventType;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -34,7 +31,6 @@ import javafx.stage.Stage;
 import model.BankEscapeException;
 import model.Direction;
 import model.Maze;
-import model.Square;
 
 /**
  *
@@ -50,7 +46,7 @@ public class EditorController extends Application implements Observer {
     private Button saveButton;
     private ImageView imgRb;
     private String type;
-    private Maze maze;    
+    private Maze maze;
     private TextField levelChoice;
 
     public EditorController() {
@@ -66,24 +62,14 @@ public class EditorController extends Application implements Observer {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        for (int i = 0; i < maze.getWidth(); i++) {
-            for (int j = 0; j < maze.getHeight(); j++) {
-                maze.addObserver(EditorController.this);
-            }
-
-        }
+        initAddObserver();
         gridPane.setHgap(3);
         gridPane.setVgap(3);
 
         ImageView img;
 
         insertImages();
-//        for (int i = 0; i < 10; i++) {
-//            for (int j = 0; j < 10; j++) {
-//                img = new ImageView("file:src/images/floor.png");
-//                setStaticImage(img, i, j);
-//            }
-//        }
+
         ToggleGroup tg = new ToggleGroup();
 
         RadioButton rbWall = new RadioButton();
@@ -160,7 +146,7 @@ public class EditorController extends Application implements Observer {
                                         break;
                                     case "enemy":
                                         maze.putEnemy(GridPane.getRowIndex(n), GridPane.getColumnIndex(n));
-                                        maze.addEnemy(Direction.UP ,GridPane.getRowIndex(n), GridPane.getColumnIndex(n));
+                                        maze.addEnemy(Direction.UP, GridPane.getRowIndex(n), GridPane.getColumnIndex(n));
                                         break;
                                     case "drill":
                                         maze.putDrill(GridPane.getRowIndex(n), GridPane.getColumnIndex(n));
@@ -210,19 +196,73 @@ public class EditorController extends Application implements Observer {
                     }
                 } catch (FileNotFoundException ex) {
                     System.out.println("Fichier introuvable");
-                } catch (BankEscapeException ex2){
+                } catch (BankEscapeException ex2) {
                     System.out.println("Problème de validation");
                 }
             }
         });
-        
+
         GridPane gpDimension = new GridPane();
-        Label lWidth = new Label("Longueur");
+        Label lWidth = new Label("Hauteur");
         Label lHeight = new Label("Largeur");
         Button bWidthPlus = new Button("+");
         Button bWidthLess = new Button("-");
         Button bHeightPlus = new Button("+");
         Button bHeightLess = new Button("-");
+
+        bWidthPlus.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                try {
+                    gridPane.getChildren().clear();
+                    maze = new Maze(maze, 1, 0);
+                    initAddObserver();
+                    insertImages();
+                } catch (BankEscapeException ex) {
+                    System.out.println(ex.getCause());
+                }
+            }
+        });
+        bWidthLess.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                try {
+                    gridPane.getChildren().clear();
+                    maze = new Maze(maze, -1, 0);
+                    initAddObserver();
+                    insertImages();
+                } catch (BankEscapeException ex) {
+                    System.out.println(ex.getCause());
+                }
+            }
+        });
+
+        bHeightPlus.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                try {
+                    gridPane.getChildren().clear();
+                    maze = new Maze(maze, 0, 1);
+                    initAddObserver();
+                    insertImages();
+                } catch (BankEscapeException ex) {
+                    System.out.println(ex.getCause());
+                }
+            }
+        });
+        bHeightLess.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                try {
+                    gridPane.getChildren().clear();
+                    maze = new Maze(maze, 0, -1);
+                    initAddObserver();
+                    insertImages();
+                } catch (BankEscapeException ex) {
+                    System.out.println(ex.getCause());
+                }
+            }
+        });
         gpDimension.add(lWidth, 0, 0);
         gpDimension.add(lHeight, 0, 1);
         gpDimension.add(bWidthPlus, 2, 0);
@@ -230,7 +270,6 @@ public class EditorController extends Application implements Observer {
         gpDimension.add(bHeightPlus, 2, 1);
         gpDimension.add(bHeightLess, 1, 1);
         info.getChildren().add(gpDimension);
-        
 
         root.setSpacing(50);
 
@@ -242,6 +281,17 @@ public class EditorController extends Application implements Observer {
         Scene scene = new Scene(rootP);
         stage.setScene(scene);
         stage.show();
+    }
+
+    private void initAddObserver() {
+        for (int i = 0; i < maze.getWidth(); i++) {
+            for (int j = 0; j < maze.getHeight(); j++) {
+                maze.deleteObserver(EditorController.this);
+                maze.addObserver(EditorController.this);
+
+            }
+
+        }
     }
 
     private void initRbImg(RadioButton rbDrill, RadioButton rbWall, RadioButton rbPlayer, RadioButton rbExit, RadioButton rbEntry, RadioButton rbFloor, RadioButton rbEnemy, RadioButton rbKey, RadioButton rbVault) {
@@ -296,7 +346,7 @@ public class EditorController extends Application implements Observer {
         info.getChildren().add(rbWall);
         info.getChildren().add(levelChoice);
         info.getChildren().add(saveButton);
-        
+
     }
 
     private void loadImgRb(RadioButton rbDrill, RadioButton rbEnemy, RadioButton rbEntry, RadioButton rbExit, RadioButton rbFloor, RadioButton rbKey, RadioButton rbPlayer, RadioButton rbVault, RadioButton rbWall) {
@@ -415,10 +465,6 @@ public class EditorController extends Application implements Observer {
         writer.close();
     }
 
-    private void initRadioButton() {
-
-    }
-
     private void setStaticImage(ImageView img, int j, int i) {
         img.setFitHeight(70);
         img.setFitWidth(70);
@@ -428,8 +474,8 @@ public class EditorController extends Application implements Observer {
     }
 
     private void insertImages() {
-        for (int i = 0; i < maze.getWidth(); i++) {
-            for (int j = 0; j < maze.getHeight(); j++) {
+        for (int i = 0; i < maze.getHeight(); i++) {
+            for (int j = 0; j < maze.getWidth(); j++) {
                 ImageView img = new ImageView();
                 switch (maze.getSquares()[j][i].getType()) {
                     case "wall":
