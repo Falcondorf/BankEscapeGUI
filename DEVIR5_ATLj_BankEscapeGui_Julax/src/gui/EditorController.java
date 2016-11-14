@@ -20,6 +20,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
@@ -214,6 +215,22 @@ public class EditorController extends Application implements Observer {
                 }
             }
         });
+        
+        GridPane gpDimension = new GridPane();
+        Label lWidth = new Label("Longueur");
+        Label lHeight = new Label("Largeur");
+        Button bWidthPlus = new Button("+");
+        Button bWidthLess = new Button("-");
+        Button bHeightPlus = new Button("+");
+        Button bHeightLess = new Button("-");
+        gpDimension.add(lWidth, 0, 0);
+        gpDimension.add(lHeight, 0, 1);
+        gpDimension.add(bWidthPlus, 2, 0);
+        gpDimension.add(bWidthLess, 1, 0);
+        gpDimension.add(bHeightPlus, 2, 1);
+        gpDimension.add(bHeightLess, 1, 1);
+        info.getChildren().add(gpDimension);
+        
 
         root.setSpacing(50);
 
