@@ -1,4 +1,4 @@
-package model;
+package be.esi.devir5.model;
 
 import java.io.IOException;
 
@@ -16,7 +16,7 @@ public class Game {
      * le niveau
      *
      * @param nameFirstLevel Le nom du niveau
-     * @throws model.BankEscapeException
+     * @throws be.esi.devir5.model.BankEscapeException
      * @throws IOException Si une lecture est erronée
      */
     public Game(String nameFirstLevel) throws BankEscapeException {

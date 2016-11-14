@@ -1,8 +1,11 @@
-package gui;
+package be.esi.devir5.gui;
 
-import controller.*;
+import be.esi.devir5.model.BankEscapeException;
+import be.esi.devir5.model.Game;
+import be.esi.devir5.model.Direction;
+import be.esi.devir5.controller.ThreadPlayer;
+import be.esi.devir5.controller.ThreadEnemy;
 import java.io.IOException;
-import model.*;
 import java.net.URL;
 import java.util.Observable;
 import java.util.Observer;

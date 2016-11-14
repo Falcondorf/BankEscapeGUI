@@ -1,9 +1,11 @@
-package view;
+package be.esi.devir5.view;
 
-import model.*;
+import be.esi.devir5.model.Maze;
+import be.esi.devir5.model.BankEscapeException;
+import be.esi.devir5.model.Game;
 import java.io.IOException;
-import controller.ThreadEnemy;
-import controller.ThreadPlayer;
+import be.esi.devir5.controller.ThreadEnemy;
+import be.esi.devir5.controller.ThreadPlayer;
 
 /**
  *

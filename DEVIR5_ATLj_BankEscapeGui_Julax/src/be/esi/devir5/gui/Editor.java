@@ -1,4 +1,4 @@
-package gui;
+package be.esi.devir5.gui;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
@@ -28,15 +28,15 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import model.BankEscapeException;
-import model.Direction;
-import model.Maze;
+import be.esi.devir5.model.BankEscapeException;
+import be.esi.devir5.model.Direction;
+import be.esi.devir5.model.Maze;
 
 /**
  *
  * @author jackd
  */
-public class EditorController extends Application implements Observer {
+public class Editor extends Application implements Observer {
 
     private AnchorPane anchor;
     private GridPane gridPane;
@@ -49,7 +49,7 @@ public class EditorController extends Application implements Observer {
     private Maze maze;
     private TextField levelChoice;
 
-    public EditorController() {
+    public Editor() {
         maze = new Maze(10, 10);
         this.anchor = new AnchorPane();
         this.gridPane = new GridPane();
@@ -286,8 +286,8 @@ public class EditorController extends Application implements Observer {
     private void initAddObserver() {
         for (int i = 0; i < maze.getWidth(); i++) {
             for (int j = 0; j < maze.getHeight(); j++) {
-                maze.deleteObserver(EditorController.this);
-                maze.addObserver(EditorController.this);
+                maze.deleteObserver(Editor.this);
+                maze.addObserver(Editor.this);
 
             }
 

@@ -1,4 +1,4 @@
-package model;
+package be.esi.devir5.model;
 
 import java.io.BufferedReader;
 import java.io.File;

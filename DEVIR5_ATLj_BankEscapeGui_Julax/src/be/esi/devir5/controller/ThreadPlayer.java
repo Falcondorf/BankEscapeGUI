@@ -1,7 +1,7 @@
-package controller;
+package be.esi.devir5.controller;
 
-import model.Direction;
-import model.Game;
+import be.esi.devir5.model.Direction;
+import be.esi.devir5.model.Game;
 import java.util.Scanner;
 
 /**

@@ -1,8 +1,7 @@
-package gui;
+package be.esi.devir5.gui;
 
-import controller.*;
+import be.esi.devir5.model.BankEscapeException;
 import java.io.IOException;
-import model.*;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -54,7 +53,7 @@ public class StartWindowController implements Initializable {
 
             Node node = (Node) event.getSource();
             Stage stage = (Stage) node.getScene().getWindow();
-            EditorController ec = new EditorController();
+            Editor ec = new Editor();
             ec.start(stage);
 
         } catch (Exception e) {
