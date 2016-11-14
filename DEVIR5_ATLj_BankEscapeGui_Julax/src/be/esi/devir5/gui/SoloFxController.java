@@ -365,13 +365,13 @@ public class SoloFxController extends Application implements Initializable, Obse
                                     img = new ImageView("file:src/images/PlayerMovNHD.gif");
                                     break;
                                 case DOWN:
-                                    img = new ImageView("file:src/images/PlayerMovS.gif");
+                                    img = new ImageView("file:src/images/PlayerMovSHD.gif");
                                     break;
                                 case LEFT:
-                                    img = new ImageView("file:src/images/PlayerMovO.gif");
+                                    img = new ImageView("file:src/images/PlayerMovWHD.gif");
                                     break;
                                 case RIGHT:
-                                    img = new ImageView("file:src/images/PlayerMovE.gif");
+                                    img = new ImageView("file:src/images/PlayerMovEHD.gif");
                                     break;
                                 default:
                             }
