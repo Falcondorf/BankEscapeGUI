@@ -24,7 +24,7 @@ public class BankEscape {
             Game g = new Game("Niveau2.txt");
              System.out.println(g.getMaze());
 
-            Maze newMaze = new Maze(g.getMaze(), 1, 1);
+            Maze newMaze = new Maze(g.getMaze(), -5, 7);
             
             System.out.println(newMaze);
             
