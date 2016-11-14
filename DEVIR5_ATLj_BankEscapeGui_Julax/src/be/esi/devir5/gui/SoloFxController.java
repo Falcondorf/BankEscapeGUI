@@ -194,6 +194,14 @@ public class SoloFxController extends Application implements Initializable, Obse
 
                         alert.showAndWait();
                         stackPane.getChildren().clear();
+                        if (g.getMaze().getNextLevelName().equals("END")) {
+                            Alert alert2 = new Alert(Alert.AlertType.INFORMATION);
+                            alert2.setTitle("Vous avez terminé le Jeu");
+                            alert2.setHeaderText("Dernier niveau achevé");
+                            alert2.setContentText("Bravo, vous êtes un voleur ... Content ?");
+                            alert2.showAndWait();
+                            System.exit(0);
+                        }
                         g = new Game(g.getMaze().getNextLevelName());
                         g.getMaze().addObserver(SoloFxController.this);
                         try {
@@ -213,7 +221,6 @@ public class SoloFxController extends Application implements Initializable, Obse
                         ThreadEnemy te = new ThreadEnemy(g);
                         te.start();
                         tp.start();
-                        
 
                     } else if (!g.isLost()) {
                         refreshPane();
