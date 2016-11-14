@@ -426,8 +426,8 @@ public class EditorController extends Application implements Observer {
 
     private void writeLevel() throws FileNotFoundException {
 
-        PrintWriter writer = new PrintWriter(levelChoice.getText());
-        writer.print(maze.getHeight() + "/" + maze.getWidth() + "/END");
+        PrintWriter writer = new PrintWriter("levels/"+levelChoice.getText());
+        writer.print(maze.getWidth() + "/" + maze.getHeight() + "/END");
         writer.println("");
         for (int i = 0; i < maze.getWidth(); i++) {
             for (int j = 0; j < maze.getHeight(); j++) {
