@@ -225,6 +225,7 @@ public class SoloFxController extends Application implements Initializable, Obse
                     } else if (!g.isLost()) {
                         refreshPane();
                     } else if (g.isLost()) {
+                        refreshPane();
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
                         alert.setTitle("Game Over");
                         alert.setHeaderText("GAME OVER !!!");
@@ -261,105 +262,44 @@ public class SoloFxController extends Application implements Initializable, Obse
                         setStaticImage(img, j, i);
                         break;
                     case "floor":
+                        if (g.getMaze().getSquares()[i][j].isLighted()){
+                             img = new ImageView("file:src/images/floorLight.png");
+                            setDynamicImage(img, j, i);
+                        }
                         if (g.getMaze().getSquares()[i][j].hasDrill()) {
-
                             img = new ImageView("file:src/images/drill.png");
                             setDynamicImage(img, j, i);
-                        } else if (g.getMaze().getSquares()[i][j].hasEnemy()) {
+                        } 
+                        if (g.getMaze().getSquares()[i][j].hasEnemy()) {
                             switch (g.getMaze().getEnemyDir(i, j)) {
                                 case UP:
                                     img = new ImageView("file:src/images/guardN.gif");
                                     setDynamicImage(img, j, i);
-                                    if (!(g.getMaze().getSquares()[i - 1][j].getType().equals("wall"))) {
-                                        img = new ImageView("file:src/images/floorLight.png");
-                                        setDynamicImage(img, j, i - 1);
-                                        if (!(g.getMaze().getSquares()[i - 2][j].getType().equals("wall"))) {
-                                            img = new ImageView("file:src/images/floorLight.png");
-                                            setDynamicImage(img, j, i - 2);
-                                            if (!(g.getMaze().getSquares()[i - 3][j].getType().equals("wall"))) {
-                                                img = new ImageView("file:src/images/floorLight.png");
-                                                setDynamicImage(img, j, i - 3);
-                                            }
-                                        }
-                                    }
-
-//                                        
-//                                        img = new ImageView("file:src/images/floorLight.png");
-//                                        setDynamicImage(img, j, i - 1);
-//                                        i--;
-//                                        cpt++;
-//                                    }
                                     break;
                                 case DOWN:
                                     img = new ImageView("file:src/images/guardS.gif");
                                     setDynamicImage(img, j, i);
-//                                    while (!g.getMaze().getSquare()[i + 1][j].getType().equals("wall")) {
-//                                        img = new ImageView("file:src/images/floorLight.png");
-//                                        setDynamicImage(img, j, i + 1);
-//                                        i++;
-//                                    }
-                                    if (!(g.getMaze().getSquares()[i + 1][j].getType().equals("wall"))) {
-                                        img = new ImageView("file:src/images/floorLight.png");
-                                        setDynamicImage(img, j, i + 1);
-                                        if (!(g.getMaze().getSquares()[i + 2][j].getType().equals("wall"))) {
-                                            img = new ImageView("file:src/images/floorLight.png");
-                                            setDynamicImage(img, j, i + 2);
-                                            if (!(g.getMaze().getSquares()[i + 3][j].getType().equals("wall"))) {
-                                                img = new ImageView("file:src/images/floorLight.png");
-                                                setDynamicImage(img, j, i + 3);
-                                            }
-                                        }
-                                    }
+//                                  
                                     break;
                                 case LEFT:
                                     img = new ImageView("file:src/images/guardO.gif");
                                     setDynamicImage(img, j, i);
-//                                    while (!g.getMaze().getSquare()[i][j - 1].getType().equals("wall")) {
-//                                        img = new ImageView("file:src/images/floorLight.png");
-//                                        setDynamicImage(img, j - 1, i);
-//                                        j--;
-//                                    }
-                                    if (!(g.getMaze().getSquares()[i][j - 1].getType().equals("wall"))) {
-                                        img = new ImageView("file:src/images/floorLight.png");
-                                        setDynamicImage(img, j - 1, i);
-                                        if (!(g.getMaze().getSquares()[i][j - 2].getType().equals("wall"))) {
-                                            img = new ImageView("file:src/images/floorLight.png");
-                                            setDynamicImage(img, j - 2, i);
-                                            if (!(g.getMaze().getSquares()[i][j - 3].getType().equals("wall"))) {
-                                                img = new ImageView("file:src/images/floorLight.png");
-                                                setDynamicImage(img, j - 3, i);
-                                            }
-                                        }
-                                    }
+//                                  
                                     break;
                                 case RIGHT:
                                     img = new ImageView("file:src/images/guardE.gif");
                                     setDynamicImage(img, j, i);
-//                                    while (!g.getMaze().getSquare()[i][j + 1].getType().equals("wall")) {
-//                                        img = new ImageView("file:src/images/floorLight.png");
-//                                        setDynamicImage(img, j + 1, i);
-//                                        j++;
-//                                    }
-                                    if (!(g.getMaze().getSquares()[i][j + 1].getType().equals("wall"))) {
-                                        img = new ImageView("file:src/images/floorLight.png");
-                                        setDynamicImage(img, j + 1, i);
-                                        if (!(g.getMaze().getSquares()[i][j + 2].getType().equals("wall"))) {
-                                            img = new ImageView("file:src/images/floorLight.png");
-                                            setDynamicImage(img, j + 2, i);
-                                            if (!(g.getMaze().getSquares()[i][j + 3].getType().equals("wall"))) {
-                                                img = new ImageView("file:src/images/floorLight.png");
-                                                setDynamicImage(img, j + 3, i);
-                                            }
-                                        }
-                                    }
+//                                   
                                     break;
                                 default:
                             }
 
-                        } else if (g.getMaze().getSquares()[i][j].hasKey()) {
+                        }
+                        if (g.getMaze().getSquares()[i][j].hasKey()) {
                             img = new ImageView("file:src/images/key.png");
                             setDynamicImage(img, j, i);
-                        } else if (g.getMaze().getSquares()[i][j].hasPlayer()) {
+                        } 
+                        if (g.getMaze().getSquares()[i][j].hasPlayer()) {
                             switch (g.getMaze().getPlayerDir(i, j)) {
                                 case UP:
                                     img = new ImageView("file:src/images/PlayerMovNHD.gif");

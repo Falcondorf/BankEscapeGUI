@@ -121,14 +121,15 @@ public class Maze extends Observable {
      *
      * @param dir La direction vers laquelle se déplacerait le joueur
      */
-    public synchronized void movePlayer(Direction dir) {
-        if (moveAutorised(dir)) {
-            this.removePlayer(player.getRow(), player.getColumn());
-            displacePlayer(dir);
-            pickSomething();
-            setChanged();
-            notifyObservers();
-            notifyAll();
+    public void movePlayer(Direction dir) {
+        synchronized (maze) {
+            if (moveAutorised(dir)) {
+                this.removePlayer(player.getRow(), player.getColumn());
+                displacePlayer(dir);
+                pickSomething();
+                setChanged();
+                notifyObservers();
+            }
         }
     }
 
@@ -151,25 +152,41 @@ public class Maze extends Observable {
      * Déplace automatiquement tous les ennemis du labyrinth après analyse des
      * cases autour
      */
-    public synchronized void autoMoveEnemy() {
-        for (Enemy e : enemyList) {
-            removeEnemy(e.getRow(), e.getColumn());
-            try {
-                Direction tmpMov = movementAnalysis(e);
-                e.move(tmpMov);
-                this.putEnemy(e.getRow(), e.getColumn());
-                e.setDirection(tmpMov);
-                watch(e);
-                setChanged();
-                notifyObservers();
-            } catch (Exception ex) {
-                System.out.println(ex);
+    public void autoMoveEnemy() {
+        synchronized (maze) {
+            for (Enemy e : enemyList) {
+                removeEnemy(e.getRow(), e.getColumn());
+                try {
+                    extinct(e);
+                    Direction tmpMov = movementAnalysis(e);
+                    e.move(tmpMov);
+                    this.putEnemy(e.getRow(), e.getColumn());
+                    e.setDirection(tmpMov);
+                    //watch(e);
+                    illuminate(e);
+                    setChanged();
+                    notifyObservers();
+                } catch (Exception ex) {
+                    System.out.println(ex);
+                }
             }
         }
-        notifyAll();
+    }
+
+    private void extinct(Enemy e) {
+        for (int i = 1; i <= 3; i++) {
+            if (maze[e.getRow() + e.getDirection().getDecalX() * i][e.getColumn() + e.getDirection().getDecalY() * i].isReachable(false, false)) {
+                maze[e.getRow() + e.getDirection().getDecalX() * i][e.getColumn() + e.getDirection().getDecalY() * i].setIsLighted(false);
+            }else {
+                break;
+            }
+        }
     }
 
     public boolean isCaught() {
+        if (maze[player.getRow()][player.getColumn()].isLighted()) {
+            player.setIsCaught();
+        }
         return player.isCaught();
     }
 
@@ -257,6 +274,16 @@ public class Maze extends Observable {
     private void watch(Enemy e) {  //champ de vision 3
         if (lookingForPlayer(e)) {
             player.setIsCaught();
+        }
+    }
+
+    private void illuminate(Enemy e) {
+        for (int i = 1; i <= 3; i++) {
+            if (maze[e.getRow() + e.getDirection().getDecalX() * i][e.getColumn() + e.getDirection().getDecalY() * i].isReachable(false, false)) {
+                maze[e.getRow() + e.getDirection().getDecalX() * i][e.getColumn() + e.getDirection().getDecalY() * i].setIsLighted(true);
+            } else {
+                break;
+            }
         }
     }
 

@@ -10,6 +10,7 @@ import java.util.Observable;
 public class Square {
 
     private String type;
+    private boolean isLighted;
     private boolean hasPlayer;
     private boolean hasEnemy;
     private boolean hasDrill;
@@ -28,6 +29,14 @@ public class Square {
         this.hasDrill = false;
         this.hasEnemy = false;
         this.hasKey = false;
+    }
+
+    public boolean isLighted() {
+        return isLighted;
+    }
+
+    public void setIsLighted(boolean isLighted) {
+        this.isLighted = isLighted;
     }
 
     /**
