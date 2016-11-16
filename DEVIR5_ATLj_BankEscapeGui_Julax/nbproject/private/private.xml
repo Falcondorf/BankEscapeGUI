@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/Z:/git/DEVIR5_ATLj_BankEscapeGUI_Julax/DEVIR5_ATLj_BankEscapeGui_Julax/src/be/esi/devir5/gui/solofx.fxml</file>
+            <file>file:/Z:/git/DEVIR5_ATLj_BankEscapeGUI_Julax/DEVIR5_ATLj_BankEscapeGui_Julax/src/be/esi/devir5/model/Player.java</file>
+            <file>file:/Z:/git/DEVIR5_ATLj_BankEscapeGUI_Julax/DEVIR5_ATLj_BankEscapeGui_Julax/src/be/esi/devir5/gui/Editor.java</file>
+            <file>file:/Z:/git/DEVIR5_ATLj_BankEscapeGUI_Julax/DEVIR5_ATLj_BankEscapeGui_Julax/src/be/esi/devir5/model/Game.java</file>
+            <file>file:/Z:/git/DEVIR5_ATLj_BankEscapeGUI_Julax/DEVIR5_ATLj_BankEscapeGui_Julax/src/be/esi/devir5/model/Movable.java</file>
+            <file>file:/Z:/git/DEVIR5_ATLj_BankEscapeGUI_Julax/DEVIR5_ATLj_BankEscapeGui_Julax/src/be/esi/devir5/gui/SoloFxController.java</file>
+            <file>file:/Z:/git/DEVIR5_ATLj_BankEscapeGUI_Julax/DEVIR5_ATLj_BankEscapeGui_Julax/src/be/esi/devir5/model/Maze.java</file>
+            <file>file:/Z:/git/DEVIR5_ATLj_BankEscapeGUI_Julax/DEVIR5_ATLj_BankEscapeGui_Julax/src/be/esi/devir5/controller/ThreadPlayer.java</file>
+            <file>file:/Z:/git/DEVIR5_ATLj_BankEscapeGUI_Julax/DEVIR5_ATLj_BankEscapeGui_Julax/src/be/esi/devir5/controller/ThreadEnemy.java</file>
+            <file>file:/Z:/git/DEVIR5_ATLj_BankEscapeGUI_Julax/DEVIR5_ATLj_BankEscapeGui_Julax/src/be/esi/devir5/model/Square.java</file>
+            <file>file:/Z:/git/DEVIR5_ATLj_BankEscapeGUI_Julax/DEVIR5_ATLj_BankEscapeGui_Julax/src/be/esi/devir5/gui/StartWindowController.java</file>
+            <file>file:/Z:/git/DEVIR5_ATLj_BankEscapeGUI_Julax/DEVIR5_ATLj_BankEscapeGui_Julax/src/be/esi/devir5/view/BankEscape.java</file>
+        </group>
+    </open-files>
+</project-private>

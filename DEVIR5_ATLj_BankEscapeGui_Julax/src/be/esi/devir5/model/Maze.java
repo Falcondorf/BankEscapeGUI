@@ -1,7 +1,6 @@
 package be.esi.devir5.model;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,6 +18,7 @@ public class Maze extends Observable {
     private Player player;
     private List<Enemy> enemyList;
     private String nextLevelName;
+    private boolean isGhost = false;
 
     public String getNextLevelName() {
         return nextLevelName;
@@ -57,6 +57,10 @@ public class Maze extends Observable {
         }
         throw new BankEscapeException("no enemy here");
     }
+    
+    public void goGhost(){
+        this.isGhost = true;
+    }
 
     public Direction getPlayerDir(int i, int j) throws BankEscapeException {
         if (player.getRow() == i && player.getColumn() == j) {
@@ -73,6 +77,21 @@ public class Maze extends Observable {
         return maze[0].length;
     }
 
+    public void giveAllToPlayer(){
+        player.setHasDrill(true);
+        player.setHasKey(true);
+    }
+    
+    public void killAllEnemies(){
+        for (int i = 0; i < maze.length; i++) {
+            for (int j = 0; j < maze[0].length; j++) {
+                maze[i][j].removeEnemy();
+                maze[i][j].setIsLighted(false);
+            }
+        }
+        enemyList.clear();
+    }
+    
     public Maze(Maze maze, int modifWidth, int modifHeight) throws BankEscapeException {
         //todo constructeur copie profonde avec modification de dimension
         this.enemyList = new ArrayList<>();
@@ -170,14 +189,15 @@ public class Maze extends Observable {
                     System.out.println(ex);
                 }
             }
+
         }
     }
 
     private void extinct(Enemy e) {
         for (int i = 1; i <= 3; i++) {
-            if (maze[e.getRow() + e.getDirection().getDecalX() * i][e.getColumn() + e.getDirection().getDecalY() * i].isReachable(false, false)) {
+            if (maze[e.getRow() + e.getDirection().getDecalX() * i][e.getColumn() + e.getDirection().getDecalY() * i].isReachable(false, false, false)) {
                 maze[e.getRow() + e.getDirection().getDecalX() * i][e.getColumn() + e.getDirection().getDecalY() * i].setIsLighted(false);
-            }else {
+            } else {
                 break;
             }
         }
@@ -279,7 +299,7 @@ public class Maze extends Observable {
 
     private void illuminate(Enemy e) {
         for (int i = 1; i <= 3; i++) {
-            if (maze[e.getRow() + e.getDirection().getDecalX() * i][e.getColumn() + e.getDirection().getDecalY() * i].isReachable(false, false)) {
+            if (maze[e.getRow() + e.getDirection().getDecalX() * i][e.getColumn() + e.getDirection().getDecalY() * i].isReachable(false, false, false)) {
                 maze[e.getRow() + e.getDirection().getDecalX() * i][e.getColumn() + e.getDirection().getDecalY() * i].setIsLighted(true);
             } else {
                 break;
@@ -290,7 +310,7 @@ public class Maze extends Observable {
     private boolean lookingForPlayer(Enemy e) {
         boolean caught = false;
         for (int i = 1; i <= 3; i++) {
-            if (maze[e.getRow() + e.getDirection().getDecalX() * i][e.getColumn() + e.getDirection().getDecalY() * i].isReachable(false, false)) {
+            if (maze[e.getRow() + e.getDirection().getDecalX() * i][e.getColumn() + e.getDirection().getDecalY() * i].isReachable(false, false, false)) {
                 if (maze[e.getRow() + e.getDirection().getDecalX() * i][e.getColumn() + e.getDirection().getDecalY() * i].hasPlayer()) {
                     caught = true;
                     break;
@@ -311,7 +331,7 @@ public class Maze extends Observable {
     private boolean moveAutorised(Direction dir) { //condition de sortie + est ce qu il y a un mur ?
 
         return isOutOfMaze(dir)
-                && maze[player.getRow() + dir.getDecalX()][player.getColumn() + dir.getDecalY()].isReachable(player.hasKey(), player.hasDrill());
+                && maze[player.getRow() + dir.getDecalX()][player.getColumn() + dir.getDecalY()].isReachable(player.hasKey(), player.hasDrill(), isGhost);
     }
 
     private boolean isOutOfMaze(Direction dir) {
@@ -422,8 +442,6 @@ public class Maze extends Observable {
             return false;
         }
 
-        System.out.println("oh yeah");
-
         //check Player chemin vers vault(vault considéré comme mur), drill, entrée    
         //check chemin entre clé et sortie secrète OPTIONELLE
         return true;
@@ -521,7 +539,7 @@ public class Maze extends Observable {
         e.resetPossibleDirection();
         for (Direction dir : Direction.values()) {
             if (!maze[e.getRow() + dir.getDecalX()][e.getColumn() + dir.getDecalY()].getType().equals("entry")
-                    && maze[e.getRow() + dir.getDecalX()][e.getColumn() + dir.getDecalY()].isReachable(false, false)) {
+                    && maze[e.getRow() + dir.getDecalX()][e.getColumn() + dir.getDecalY()].isReachable(false, false, false)) {
                 e.addPossibleDirection(dir);
             }
         }
@@ -536,7 +554,7 @@ public class Maze extends Observable {
 
     private Direction movementDecision(Enemy e, Direction dir, int decalRow, int decalCol) { //couloir ou coin
         if (maze[e.getRow() + decalRow][e.getColumn() + decalCol].getType().equals("entry")
-                || !maze[e.getRow() + decalRow][e.getColumn() + decalCol].isReachable(false, false)) { // mur devant lui
+                || !maze[e.getRow() + decalRow][e.getColumn() + decalCol].isReachable(false, false, false)) { // mur devant lui
             //choisir une direction possible au hasard
             return e.randDir();
 
@@ -560,10 +578,10 @@ public class Maze extends Observable {
         while ((r = br.read()) != '/') {
             buf2.append((char) r);
         }
-        while ((r = br.read()) != '\r') {
+        while ((r = br.read()) != '\r') {  //\n
             buf3.append((char) r);
         }
-        r = br.read();
+        r = br.read();    //commenter
         this.enemyList = new ArrayList<>();
 
         maze = new Square[Integer.parseInt(buf1.toString())][Integer.parseInt(buf2.toString())];

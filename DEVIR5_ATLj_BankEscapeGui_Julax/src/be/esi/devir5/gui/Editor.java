@@ -5,8 +5,6 @@ import java.io.PrintWriter;
 import java.util.ConcurrentModificationException;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;

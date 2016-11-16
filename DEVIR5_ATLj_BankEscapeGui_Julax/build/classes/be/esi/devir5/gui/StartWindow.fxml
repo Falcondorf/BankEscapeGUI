@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane fx:id="anchor" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="be.esi.devir5.gui.StartWindowController">
+    <children>
+        <VBox fx:id="vbox" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" spacing="50.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+            <children>
+                <Label fx:id="label" />
+                <Button fx:id="solo" mnemonicParsing="false" onAction="#handleButtonSolo" text="Solo" />
+            <TextField fx:id="txtFieldLevel" prefHeight="31.0" prefWidth="420.0" promptText="Level Name" text="Niveau1.txt">
+               <VBox.margin>
+                  <Insets left="200.0" right="200.0" top="-40.0" />
+               </VBox.margin>
+            </TextField>
+                <Button fx:id="editor" mnemonicParsing="false" onAction="#handleButtonEdit" text="Editor" />
+                <Button fx:id="exit" mnemonicParsing="false" onAction="#quitWindowEvent" text="Exit" />
+            </children>
+        </VBox>
+    </children>
+</AnchorPane>

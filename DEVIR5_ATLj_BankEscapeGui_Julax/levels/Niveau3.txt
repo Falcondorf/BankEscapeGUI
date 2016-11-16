@@ -1,9 +1,9 @@
-8/11/END
+8/11/Niveau8.txt
 WWWWWWWWWWW
-WI  EE  WPW
-W   EE  WDW
-WV  EEE WKW
-W   EE  W W
-W   EE    W
-W  S      W
+W   E  SWIW
+W WWWW  WPW
+WVW   WKW W
+W   WWWWW W
+WWW       W
+WD  WWWWW W
 WWWWWWWWWWW

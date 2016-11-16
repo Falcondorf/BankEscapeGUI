@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp spec="1.0" xmlns:jfx="http://javafx.com" href="DEVIR5_ATLj_BankEscapeGui_Julax.jnlp">
+  <information>
+    <title>DEVIR5_ATLj_BankEscapeGui_Julax</title>
+    <vendor>Julax</vendor>
+    <description>null</description>
+    <offline-allowed/>
+  </information>
+  <resources>
+    <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
+    <jar href="DEVIR5_ATLj_BankEscapeGui_Julax.jar" size="135857" download="eager" />
+  </resources>
+  <applet-desc  width="800" height="600" main-class="com.javafx.main.NoJavaFXFallback"  name="DEVIR5_ATLj_BankEscapeGui_Julax" >
+    <param name="requiredFXVersion" value="8.0+"/>
+  </applet-desc>
+  <jfx:javafx-desc  width="800" height="600" main-class="be.esi.devir5.gui.MainGui"  name="DEVIR5_ATLj_BankEscapeGui_Julax" />
+  <update check="always"/>
+</jnlp>

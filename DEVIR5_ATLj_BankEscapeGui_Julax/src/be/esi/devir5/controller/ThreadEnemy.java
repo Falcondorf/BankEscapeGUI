@@ -35,7 +35,6 @@ public class ThreadEnemy extends Thread {
             } catch (InterruptedException ex) {
                 System.out.println("error2");
             }
-
         }
     }
 

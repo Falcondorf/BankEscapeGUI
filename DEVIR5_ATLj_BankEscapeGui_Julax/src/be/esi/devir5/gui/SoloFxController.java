@@ -3,7 +3,6 @@ package be.esi.devir5.gui;
 import be.esi.devir5.model.BankEscapeException;
 import be.esi.devir5.model.Game;
 import be.esi.devir5.model.Direction;
-import be.esi.devir5.controller.ThreadPlayer;
 import be.esi.devir5.controller.ThreadEnemy;
 import java.io.IOException;
 import java.net.URL;
@@ -14,16 +13,21 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 /**
@@ -33,14 +37,16 @@ import javafx.stage.Stage;
 public class SoloFxController extends Application implements Initializable, Observer {
 
     private AnchorPane anchor;
+    private Scene scene;
     private Pane paneStatic;
     private Pane paneDynamic;
     private StackPane stackPane;
     private Game g;
     private Stage stage;
     private String nameLevel;
+    private ThreadEnemy te;
 
-    public SoloFxController(String nameLevel) {
+    public SoloFxController(String nameLevel, boolean mirror) {
         this.anchor = new AnchorPane();
         this.paneStatic = new Pane();
         this.paneDynamic = new Pane();
@@ -50,23 +56,75 @@ public class SoloFxController extends Application implements Initializable, Obse
 
     @Override
     public void start(Stage primaryStage) throws BankEscapeException, IOException {
+        initWindow(primaryStage);
+    }
+
+    private void initWindow(Stage primaryStage) throws IOException, BankEscapeException {
+        VBox menuWindoEtc = new VBox();
+        MenuBar mbMenu = new MenuBar();
+        Menu menuContoller = new Menu("Controller");
+        Menu menuCheats = new Menu("Cheats");
+        MenuItem mirror = new MenuItem("Mirror");
+        MenuItem cheat1 = new MenuItem("Unlock all items");
+        MenuItem cheat2 = new MenuItem("Ghost mode");
+        MenuItem cheat3 = new MenuItem("Kill all enemies");
+        mirror.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                try {
+                    Mirrored m = new Mirrored(g);
+                    m.start(new Stage());
+                } catch (Exception ex) {
+                    System.out.println(ex);
+                }
+            }
+        });
+        cheat1.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                g.getMaze().giveAllToPlayer();
+            }
+        });
+        cheat2.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                g.getMaze().goGhost();
+            }
+        });
+        cheat3.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                g.getMaze().killAllEnemies();
+            }
+        });
+        menuContoller.getItems().add(mirror);
+        menuCheats.getItems().addAll(cheat1, cheat2, cheat3);
+        mbMenu.getMenus().addAll(menuContoller, menuCheats);
+
         g = new Game(nameLevel);
         g.getMaze().addObserver(SoloFxController.this);
+
         stage = primaryStage;
+
         insertImages();
+
         stackPane.getChildren().add(paneStatic);
         stackPane.getChildren().add(paneDynamic);
+        anchor.getChildren().add(mbMenu);
         anchor.getChildren().add(stackPane);
-        Parent root = anchor;
-        Scene scene = new Scene(root);
+        menuWindoEtc.getChildren().addAll(mbMenu, stackPane);
+
+        scene = new Scene(menuWindoEtc);
         stage.setScene(scene);
         stage.show();
 
-        ThreadPlayer tp = new ThreadPlayer(g);
-        ThreadEnemy te = new ThreadEnemy(g);
+        te = new ThreadEnemy(g);
         te.start();
-        tp.start();
 
+        setKeysMovement();
+    }
+
+    private void setKeysMovement() {
         scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
@@ -87,23 +145,14 @@ public class SoloFxController extends Application implements Initializable, Obse
                 }
             }
         });
-//        while (!g.isLost()) {
-//            if (g.endLevel()) {
-//                te.start();
-//                tp.start();
-//            }
-//        }
     }
 
     private void insertImages() throws IOException {
-
         for (int i = 0; i < g.getMaze().getSquares().length; i++) {
             for (int j = 0; j < g.getMaze().getSquares()[0].length; j++) {
-                ImageView img = new ImageView();
+                ImageView img;
                 switch (g.getMaze().getSquares()[i][j].getType()) {
                     case "wall":
-
-                        // img = new ImageView(new Image(StartWindowController.class.getResourceAsStream(".\\src\\images\\sis.jpg")));
                         img = new ImageView("file:src/images/wall2.png");
                         setStaticImage(img, j, i);
 
@@ -155,10 +204,8 @@ public class SoloFxController extends Application implements Initializable, Obse
                     default:
                         System.out.println("Error : invalid element read ");
                 }
-                // setStaticImage(img, j, i);
 
             }
-            //  str += "\n";
         }
     }
 
@@ -187,13 +234,8 @@ public class SoloFxController extends Application implements Initializable, Obse
             public void run() {
                 try {
                     if (g.endLevel()) {
-                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                        alert.setTitle("Niveau Terminé");
-                        alert.setHeaderText("Vous avez réussi!!!");
-                        alert.setContentText("Bravo, vous avez récupéré l'argent et vous êtes enfuis. Quel gredin...");
+                        refreshPane();
 
-                        alert.showAndWait();
-                        stackPane.getChildren().clear();
                         if (g.getMaze().getNextLevelName().equals("END")) {
                             Alert alert2 = new Alert(Alert.AlertType.INFORMATION);
                             alert2.setTitle("Vous avez terminé le Jeu");
@@ -202,25 +244,19 @@ public class SoloFxController extends Application implements Initializable, Obse
                             alert2.showAndWait();
                             System.exit(0);
                         }
-                        g = new Game(g.getMaze().getNextLevelName());
-                        g.getMaze().addObserver(SoloFxController.this);
-                        try {
-                            insertImages();
-                        } catch (IOException ex) {
-                            System.out.println("ololool");
-                        }
-                        stackPane.getChildren().add(paneStatic);
-                        stackPane.getChildren().add(paneDynamic);
-                        anchor.getChildren().add(stackPane);
-                        Parent root = anchor;
-                        Scene scene = new Scene(root);
-                        stage.setScene(scene);
-                        stage.show();
+                        anchor.getChildren().clear();
+                        stackPane.getChildren().clear();
+                        anchor = new AnchorPane();
+                        paneStatic = new Pane();
+                        paneDynamic = new Pane();
+                        stackPane = new StackPane();
+                        nameLevel = g.getMaze().getNextLevelName();
 
-                        ThreadPlayer tp = new ThreadPlayer(g);
-                        ThreadEnemy te = new ThreadEnemy(g);
-                        te.start();
-                        tp.start();
+                        try {
+                            initWindow(stage);
+                        } catch (IOException ex) {
+                            System.out.println(ex);
+                        }
 
                     } else if (!g.isLost()) {
                         refreshPane();
@@ -250,26 +286,19 @@ public class SoloFxController extends Application implements Initializable, Obse
             for (int j = 0; j < g.getMaze().getSquares()[0].length; j++) {
                 ImageView img = new ImageView();
                 switch (g.getMaze().getSquares()[i][j].getType()) {
-//                    case "wall":
-//
-//                        // img = new ImageView(new Image(StartWindowController.class.getResourceAsStream(".\\src\\images\\sis.jpg")));
-//                        img = new ImageView("file:src/images/wall2.png");
-//                        setStaticImage(img, j, i);
-//
-//                        break;
                     case "exit":
                         img = new ImageView("file:src/images/exit.png");
                         setStaticImage(img, j, i);
                         break;
                     case "floor":
-                        if (g.getMaze().getSquares()[i][j].isLighted()){
-                             img = new ImageView("file:src/images/floorLight.png");
+                        if (g.getMaze().getSquares()[i][j].isLighted()) {
+                            img = new ImageView("file:src/images/floorLight.png");
                             setDynamicImage(img, j, i);
                         }
                         if (g.getMaze().getSquares()[i][j].hasDrill()) {
                             img = new ImageView("file:src/images/drill.png");
                             setDynamicImage(img, j, i);
-                        } 
+                        }
                         if (g.getMaze().getSquares()[i][j].hasEnemy()) {
                             switch (g.getMaze().getEnemyDir(i, j)) {
                                 case UP:
@@ -279,17 +308,14 @@ public class SoloFxController extends Application implements Initializable, Obse
                                 case DOWN:
                                     img = new ImageView("file:src/images/guardS.gif");
                                     setDynamicImage(img, j, i);
-//                                  
                                     break;
                                 case LEFT:
                                     img = new ImageView("file:src/images/guardO.gif");
                                     setDynamicImage(img, j, i);
-//                                  
                                     break;
                                 case RIGHT:
                                     img = new ImageView("file:src/images/guardE.gif");
                                     setDynamicImage(img, j, i);
-//                                   
                                     break;
                                 default:
                             }
@@ -298,7 +324,7 @@ public class SoloFxController extends Application implements Initializable, Obse
                         if (g.getMaze().getSquares()[i][j].hasKey()) {
                             img = new ImageView("file:src/images/key.png");
                             setDynamicImage(img, j, i);
-                        } 
+                        }
                         if (g.getMaze().getSquares()[i][j].hasPlayer()) {
                             switch (g.getMaze().getPlayerDir(i, j)) {
                                 case UP:
@@ -330,10 +356,7 @@ public class SoloFxController extends Application implements Initializable, Obse
                     default:
                         break;
                 }
-
-                // setStaticImage(img, j, i);
             }
-            //  str += "\n";
         }
 
     }

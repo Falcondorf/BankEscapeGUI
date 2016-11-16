@@ -1,6 +1,8 @@
 package be.esi.devir5.model;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Classe d'un niveau de jeu.
@@ -28,6 +30,14 @@ public class Game {
         }
 
     }
+    
+    public Game(Game g){
+        try {
+            maze = new Maze(g.getMaze(), 0, 0);
+        } catch (BankEscapeException ex) {
+            System.out.println("Recopie échoué... "+ex);
+        }
+    }
 
     /**
      * Accède au labyrinth
@@ -45,9 +55,6 @@ public class Game {
      * rapporté le butin
      */
     public boolean isLost() {
-        if (this.maze.isCaught()) {
-            System.out.println("fini");
-        }
         return this.maze.isCaught();
     }
 

@@ -1,7 +1,5 @@
 package be.esi.devir5.model;
 
-import java.util.Observable;
-
 /**
  * Classe représentant une case du plateau de jeu.
  *
@@ -156,11 +154,12 @@ public class Square {
      * @param hasDrill true si le joueur possede la foreuse.
      * @return true si la case est atteignable.
      */
-    public boolean isReachable(boolean hasKey, boolean hasDrill) {
+    public boolean isReachable(boolean hasKey, boolean hasDrill, boolean ghost) {
         return (hasDrill && type.equals("vault"))
                 || (hasKey && type.equals("exit"))
                 || (type.equals("floor"))
-                || (type.equals("entry"));
+                || (type.equals("entry"))
+                || ghost;
     }
 
     /**

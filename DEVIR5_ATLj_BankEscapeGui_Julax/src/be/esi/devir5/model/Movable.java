@@ -1,7 +1,5 @@
 package be.esi.devir5.model;
 
-import javafx.beans.Observable;
-
 /**
  * Classe mère représentant toute entité déplacable
  *
